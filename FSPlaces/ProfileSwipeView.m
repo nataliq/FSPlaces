@@ -83,7 +83,7 @@
     else
         newPoint.y = midPointY;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"FSNotificationShowProfile" object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:self.downDirection] forKey:@"show"]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FSNotificationShowProfile" object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:self.downDirection] forKey:@"showProfile"]];
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^(){
         self.center = newPoint;

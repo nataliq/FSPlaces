@@ -7,10 +7,10 @@
 //
 
 #import <MapKit/MapKit.h>
-#import <CoreLocation/CoreLocation.h>
 
 #import "PlacesViewController.h"
 #import "FSConnectionManager.h"
+#import "FSLocationManager.h"
 #import "FSVenue.h"
 #import "FSVenueAnnotation.h"
 
@@ -21,7 +21,6 @@
 @interface PlacesViewController () <MKMapViewDelegate>
 
 @property (strong, nonatomic, readwrite) UIWebView *webView;
-@property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -39,40 +38,34 @@
         [self showWebView];
     }
     
-    [self plotVenuesNearbyMe];
+    else [self plotVenuesNearbyMe];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    CLLocationCoordinate2D centerCoordinate;
-    centerCoordinate.latitude = MAP_CENTER_LAT;
-    centerCoordinate.longitude = MAP_CENTER_LONG;
-    [self.map setRegion:MKCoordinateRegionMakeWithDistance(centerCoordinate, MAP_REGION, MAP_REGION)];
-    
+//    CLLocationCoordinate2D centerCoordinate;
+//    centerCoordinate.latitude = MAP_CENTER_LAT;
+//    centerCoordinate.longitude = MAP_CENTER_LONG;
+//    [self.map setRegion:MKCoordinateRegionMakeWithDistance(centerCoordinate, MAP_REGION, MAP_REGION)];
+//    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(enableMapView:)
                                                  name:@"FSNotificationShowProfile"
                                                object:nil];
 }
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.webView = nil;
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Lazy getter
-
-- (CLLocationManager *)locationManager
-{
-    if (!_locationManager) {
-        _locationManager = [[CLLocationManager alloc] init];
-        _locationManager.delegate = self;
-        _locationManager.distanceFilter = kCLDistanceFilterNone;
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    }
-    return _locationManager;
 }
 
 #pragma mark - Web view 
@@ -99,21 +92,20 @@
     
     BOOL success = [FSConnectionManager extractTockenFromResponseURL:[self.webView.request URL]];
     if (success) {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.webView removeFromSuperview];
+        [self plotVenuesNearbyMe];
     }
 }
 
-#pragma mark - Location Manager Delegate
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation *location = [locations objectAtIndex:0];
-}
-
-#pragma mark - MKMap
+#pragma mark - Map View
 
 - (void)plotVenuesNearbyMe
 {
-    NSArray *venues = [FSConnectionManager findVenuesNearby:self.locationManager.location limit:20 searchterm:nil];
+    CLLocation *location = [[FSLocationManager sharedManager] getCurrentLocation];
+    [self.map setRegion:MKCoordinateRegionMakeWithDistance(location.coordinate, MAP_REGION, MAP_REGION)];
+    
+    NSArray *venues = [FSConnectionManager findVenuesNearby:location limit:20 searchterm:nil];
     
     for (FSVenue *venue in venues) {
         
@@ -145,10 +137,15 @@
 
 - (void)enableMapView:(NSNotification *)notification
 {
-    BOOL enable = ![[notification.userInfo objectForKey:@"show"] boolValue];
-    [UIView animateWithDuration:1.0 animations:^(){
+    BOOL enable = ![[notification.userInfo objectForKey:@"showProfile"] boolValue];
+    
+    [UIView animateWithDuration:0.5 animations:^() {
         float angle = (enable) ? 0 : M_PI;
         self.arrowImageView.transform = CGAffineTransformMakeRotation(angle);
+    }];
+    
+    [UIView animateWithDuration:1.0 animations:^(){
+        
         self.map.alpha = (enable) ? 1 : 0.5;
         self.map.userInteractionEnabled = enable;
         self.map.scrollEnabled = enable;

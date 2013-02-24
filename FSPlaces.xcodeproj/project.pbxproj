@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F317045A16D8F77700397BF1 /* BZFoursquare.m in Sources */ = {isa = PBXBuildFile; fileRef = F317045716D8F77700397BF1 /* BZFoursquare.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F317045B16D8F77700397BF1 /* BZFoursquareRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F317045916D8F77700397BF1 /* BZFoursquareRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F317045D16D8F85F00397BF1 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F317045C16D8F85F00397BF1 /* MobileCoreServices.framework */; };
 		F317046016D908B100397BF1 /* PlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F317045F16D908B100397BF1 /* PlacesViewController.m */; };
 		F3471ABE16D965CB00DA5A67 /* FSConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F3471ABD16D965CB00DA5A67 /* FSConnectionManager.m */; };
@@ -23,6 +21,7 @@
 		F3471AE716D9B11700DA5A67 /* down.png in Resources */ = {isa = PBXBuildFile; fileRef = F3471AE616D9B11700DA5A67 /* down.png */; };
 		F3471AEC16D9B48F00DA5A67 /* up.png in Resources */ = {isa = PBXBuildFile; fileRef = F3471AEA16D9B48F00DA5A67 /* up.png */; };
 		F3471AED16D9B48F00DA5A67 /* up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3471AEB16D9B48F00DA5A67 /* up@2x.png */; };
+		F3500B2A16DA483100267DD4 /* FSLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F3500B2916DA483100267DD4 /* FSLocationManager.m */; };
 		F38C2E0F16D8E0A500969D14 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F38C2E0E16D8E0A500969D14 /* UIKit.framework */; };
 		F38C2E1116D8E0A500969D14 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F38C2E1016D8E0A500969D14 /* Foundation.framework */; };
 		F38C2E1316D8E0A500969D14 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F38C2E1216D8E0A500969D14 /* CoreGraphics.framework */; };
@@ -36,10 +35,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F317045616D8F77700397BF1 /* BZFoursquare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BZFoursquare.h; sourceTree = "<group>"; };
-		F317045716D8F77700397BF1 /* BZFoursquare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BZFoursquare.m; sourceTree = "<group>"; };
-		F317045816D8F77700397BF1 /* BZFoursquareRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BZFoursquareRequest.h; sourceTree = "<group>"; };
-		F317045916D8F77700397BF1 /* BZFoursquareRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BZFoursquareRequest.m; sourceTree = "<group>"; };
 		F317045C16D8F85F00397BF1 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		F317045E16D908B100397BF1 /* PlacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesViewController.h; sourceTree = "<group>"; };
 		F317045F16D908B100397BF1 /* PlacesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesViewController.m; sourceTree = "<group>"; };
@@ -61,6 +56,8 @@
 		F3471AE616D9B11700DA5A67 /* down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down.png; sourceTree = "<group>"; };
 		F3471AEA16D9B48F00DA5A67 /* up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up.png; sourceTree = "<group>"; };
 		F3471AEB16D9B48F00DA5A67 /* up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "up@2x.png"; sourceTree = "<group>"; };
+		F3500B2816DA483100267DD4 /* FSLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSLocationManager.h; sourceTree = "<group>"; };
+		F3500B2916DA483100267DD4 /* FSLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSLocationManager.m; sourceTree = "<group>"; };
 		F38C2E0B16D8E0A500969D14 /* FSPlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FSPlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F38C2E0E16D8E0A500969D14 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F38C2E1016D8E0A500969D14 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -95,22 +92,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F317045516D8F77700397BF1 /* BZFoursquare */ = {
-			isa = PBXGroup;
-			children = (
-				F317045616D8F77700397BF1 /* BZFoursquare.h */,
-				F317045716D8F77700397BF1 /* BZFoursquare.m */,
-				F317045816D8F77700397BF1 /* BZFoursquareRequest.h */,
-				F317045916D8F77700397BF1 /* BZFoursquareRequest.m */,
-			);
-			path = BZFoursquare;
-			sourceTree = "<group>";
-		};
 		F3471ACC16D99BB600DA5A67 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				F3471ABC16D965CB00DA5A67 /* FSConnectionManager.h */,
 				F3471ABD16D965CB00DA5A67 /* FSConnectionManager.m */,
+				F3500B2816DA483100267DD4 /* FSLocationManager.h */,
+				F3500B2916DA483100267DD4 /* FSLocationManager.m */,
 				F3471AC316D983F600DA5A67 /* FSParser.h */,
 				F3471AC416D983F600DA5A67 /* FSParser.m */,
 			);
@@ -134,7 +122,6 @@
 			isa = PBXGroup;
 			children = (
 				F317045C16D8F85F00397BF1 /* MobileCoreServices.framework */,
-				F317045516D8F77700397BF1 /* BZFoursquare */,
 				F38C2E1416D8E0A500969D14 /* FSPlaces */,
 				F38C2E0D16D8E0A500969D14 /* Frameworks */,
 				F38C2E0C16D8E0A500969D14 /* Products */,
@@ -267,8 +254,6 @@
 			files = (
 				F38C2E1B16D8E0A500969D14 /* main.m in Sources */,
 				F38C2E1F16D8E0A500969D14 /* AppDelegate.m in Sources */,
-				F317045A16D8F77700397BF1 /* BZFoursquare.m in Sources */,
-				F317045B16D8F77700397BF1 /* BZFoursquareRequest.m in Sources */,
 				F317046016D908B100397BF1 /* PlacesViewController.m in Sources */,
 				F3471ABE16D965CB00DA5A67 /* FSConnectionManager.m in Sources */,
 				F3471AC516D983F600DA5A67 /* FSParser.m in Sources */,
@@ -276,6 +261,7 @@
 				F3471ACB16D98E6600DA5A67 /* FSVenueAnnotation.m in Sources */,
 				F3471AD016D99BD300DA5A67 /* FSUser.m in Sources */,
 				F3471AD316D99D5400DA5A67 /* ProfileSwipeView.m in Sources */,
+				F3500B2A16DA483100267DD4 /* FSLocationManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

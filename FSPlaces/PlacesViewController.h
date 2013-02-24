@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PlacesViewController : UIViewController <UIWebViewDelegate, CLLocationManagerDelegate>
+@interface PlacesViewController : UIViewController <UIWebViewDelegate>
 
 @end

@@ -62,7 +62,7 @@
     
 	// Build GET URL
 	NSMutableString *venuesURL = [[NSMutableString alloc] initWithFormat:FS_VENUES_FORMAT, CLIENT_SECRET, CLIENT_ID];
-	[venuesURL appendFormat:@"&ll=%f,%f", 42.685685, 23.31];
+	[venuesURL appendFormat:@"&ll=%f,%f", location.coordinate.latitude, location.coordinate.longitude];
 	[venuesURL appendFormat:@"&limit=%d", limit];
 	if(searchterm != nil) [venuesURL appendFormat:@"&q=%@", searchterm];
 
