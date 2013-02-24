@@ -16,6 +16,7 @@
 + (BOOL)extractTockenFromResponseURL:(NSURL *)url;
 + (BOOL)isActive;
 + (NSArray*) findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
++ (NSArray*) findVenuesNearbyMeWithLimit:(int)limit;
 + (FSUser *)getUserInfo;
-
++ (void)saveCurrentUser;
 @end

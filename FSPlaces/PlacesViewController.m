@@ -14,11 +14,10 @@
 #import "FSVenue.h"
 #import "FSVenueAnnotation.h"
 
-#define MAP_CENTER_LAT 42.685685
-#define MAP_CENTER_LONG 23.319125
 #define MAP_REGION 500
+#define VENUES_LIMIT 20
 
-@interface PlacesViewController () <MKMapViewDelegate>
+@interface PlacesViewController () <MKMapViewDelegate, UIWebViewDelegate>
 
 @property (strong, nonatomic, readwrite) UIWebView *webView;
 @property (weak, nonatomic) IBOutlet MKMapView *map;
@@ -30,29 +29,43 @@
 
 @implementation PlacesViewController
 
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(enableMapView:)
+                                                     name:@"FSNotificationShowProfile"
+                                                   object:nil];
+
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"FSNotificationShowProfile" object:nil];
+}
+
+
+#pragma mark - View controller lifecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
    
-    if (![FSConnectionManager isActive]) {
+    if (![FSConnectionManager isActive])
+    {
         [self showWebView];
     }
     
     else [self plotVenuesNearbyMe];
     
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-//    CLLocationCoordinate2D centerCoordinate;
-//    centerCoordinate.latitude = MAP_CENTER_LAT;
-//    centerCoordinate.longitude = MAP_CENTER_LONG;
-//    [self.map setRegion:MKCoordinateRegionMakeWithDistance(centerCoordinate, MAP_REGION, MAP_REGION)];
-//    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(enableMapView:)
-                                                 name:@"FSNotificationShowProfile"
-                                               object:nil];
+    
+    [FSConnectionManager saveCurrentUser];
+    
 }
 
 - (void)viewDidUnload
@@ -60,7 +73,6 @@
     [super viewDidUnload];
     self.webView = nil;
 }
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -80,18 +92,22 @@
 
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if ([request.URL.scheme isEqualToString:@"itms-apps"]) {
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if ([request.URL.scheme isEqualToString:@"itms-apps"])
+    {
         [[UIApplication sharedApplication] openURL:request.URL];
         return NO;
     }
     return YES;
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
     
     BOOL success = [FSConnectionManager extractTockenFromResponseURL:[self.webView.request URL]];
-    if (success) {
+    if (success)
+    {
         [self.webView removeFromSuperview];
         [self plotVenuesNearbyMe];
     }
@@ -105,13 +121,12 @@
     CLLocation *location = [[FSLocationManager sharedManager] getCurrentLocation];
     [self.map setRegion:MKCoordinateRegionMakeWithDistance(location.coordinate, MAP_REGION, MAP_REGION)];
     
-    NSArray *venues = [FSConnectionManager findVenuesNearby:location limit:20 searchterm:nil];
-    
-    for (FSVenue *venue in venues) {
+    NSArray *venues = [FSConnectionManager findVenuesNearbyMeWithLimit:VENUES_LIMIT];
+    for (FSVenue *venue in venues)
+    {
         
         FSVenueAnnotation *annotation = [[FSVenueAnnotation alloc]
                                          initWithCoordinate:venue.location.coordinate name:venue.name andCategoryNames:venue.categoryNames];
-        
         [self.map addAnnotation:annotation];
         
     }
@@ -119,11 +134,12 @@
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    NSString *indentifire = @"mmAnnotation";
+    NSString *indentifire = @"fsqAnnotation";
     
     MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[self.map dequeueReusableAnnotationViewWithIdentifier:indentifire];
     
-    if (annotationView == nil) {
+    if (annotationView == nil)
+    {
         annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:indentifire];
     }
     
@@ -146,15 +162,11 @@
     
     [UIView animateWithDuration:1.0 animations:^(){
         
-        self.map.alpha = (enable) ? 1 : 0.5;
+        self.map.alpha = (enable) ? 1 : 0.8;
         self.map.userInteractionEnabled = enable;
         self.map.scrollEnabled = enable;
         self.map.zoomEnabled = enable;
     }];
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"FSNotificationShowProfile" object:nil];
-}
 @end
