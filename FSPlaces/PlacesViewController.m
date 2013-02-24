@@ -58,14 +58,20 @@
    
     if (![FSConnectionManager isActive])
     {
-        [self showWebView];
+      //  [self showWebView];
     }
     
-    else [self plotVenuesNearbyMe];
+     [self plotVenuesNearbyMe];
     
     
-    [FSConnectionManager saveCurrentUser];
+   // [FSConnectionManager saveCurrentUser];
     
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(42, 23);
+    [self.map setRegion:MKCoordinateRegionMakeWithDistance(coordinate, MAP_REGION, MAP_REGION)];
 }
 
 - (void)viewDidUnload
@@ -119,16 +125,24 @@
 - (void)plotVenuesNearbyMe
 {
     CLLocation *location = [[FSLocationManager sharedManager] getCurrentLocation];
-    [self.map setRegion:MKCoordinateRegionMakeWithDistance(location.coordinate, MAP_REGION, MAP_REGION)];
-    
-    NSArray *venues = [FSConnectionManager findVenuesNearbyMeWithLimit:VENUES_LIMIT];
-    for (FSVenue *venue in venues)
+    if (location) {
+        [self.map setRegion:MKCoordinateRegionMakeWithDistance(location.coordinate, MAP_REGION, MAP_REGION)];
+        
+        NSArray *venues = [FSConnectionManager findVenuesNearbyMeWithLimit:VENUES_LIMIT];
+        for (FSVenue *venue in venues)
+        {
+            
+            FSVenueAnnotation *annotation = [[FSVenueAnnotation alloc]
+                                             initWithCoordinate:venue.location.coordinate name:venue.name andCategoryNames:venue.categoryNames];
+            [self.map addAnnotation:annotation];
+            
+        }
+
+    }
+    else
     {
-        
-        FSVenueAnnotation *annotation = [[FSVenueAnnotation alloc]
-                                         initWithCoordinate:venue.location.coordinate name:venue.name andCategoryNames:venue.categoryNames];
-        [self.map addAnnotation:annotation];
-        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't determinate location" message:@"Turn on location services to find venues near by you" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
     }
 }
 

@@ -8,7 +8,7 @@
 
 #import "FSParser.h"
 #import "FSVenue.h"
-#import "FSUser.h"
+#import "User.h"
 
 @implementation FSParser
 
@@ -54,7 +54,7 @@
 }
 
 
-+ (FSUser *)parseUserInformation:(NSData *)data
++ (User *)parseUserInformation:(NSData *)data
 {
     NSError *myError;
     NSDictionary *parsedData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&myError];
@@ -66,7 +66,7 @@
     NSDictionary *response = [(NSDictionary*)parsedData objectForKey:@"response"];
     NSDictionary *userInfo = [response objectForKey:@"user"];
    
-    FSUser *user = [FSUser new];
+    User *user = [User new];
 
     user.identifier = [userInfo objectForKey:@"id"];
     user.fName = [userInfo objectForKey:@"firstName"];
@@ -78,7 +78,6 @@
     user.facebook = [contactInfo objectForKey:@"facebook"];
     user.email = [contactInfo objectForKey:@"email"];
 
-    NSLog(@"%@, %@, %@", user.fName, user.lName, user.photoURL);
     return user;
 }
 

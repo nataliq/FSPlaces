@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class FSUser;
+@class User;
 
 @interface FSConnectionManager : NSObject
 
@@ -17,6 +17,6 @@
 + (BOOL)isActive;
 + (NSArray*) findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
 + (NSArray*) findVenuesNearbyMeWithLimit:(int)limit;
-+ (FSUser *)getUserInfo;
++ (User *)getUserInfo;
 + (void)saveCurrentUser;
 @end

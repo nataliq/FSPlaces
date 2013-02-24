@@ -32,6 +32,10 @@
 		F38C2E2316D8E0A500969D14 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F38C2E2216D8E0A500969D14 /* Default@2x.png */; };
 		F38C2E2516D8E0A500969D14 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F38C2E2416D8E0A500969D14 /* Default-568h@2x.png */; };
 		F38C2E2816D8E0A500969D14 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F38C2E2616D8E0A500969D14 /* MainStoryboard.storyboard */; };
+		F39D03E716DA853500C5C1D5 /* AsyncConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F39D03E616DA853500C5C1D5 /* AsyncConnection.m */; };
+		F39D03E916DA91B300C5C1D5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F39D03E816DA91B300C5C1D5 /* CoreData.framework */; };
+		F39D03EC16DA91F600C5C1D5 /* FSData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F39D03EA16DA91F500C5C1D5 /* FSData.xcdatamodeld */; };
+		F39D03EF16DA94AF00C5C1D5 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = F39D03EE16DA94AF00C5C1D5 /* User.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +76,12 @@
 		F38C2E2216D8E0A500969D14 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		F38C2E2416D8E0A500969D14 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		F38C2E2716D8E0A500969D14 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		F39D03E516DA853500C5C1D5 /* AsyncConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncConnection.h; sourceTree = "<group>"; };
+		F39D03E616DA853500C5C1D5 /* AsyncConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncConnection.m; sourceTree = "<group>"; };
+		F39D03E816DA91B300C5C1D5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F39D03EB16DA91F600C5C1D5 /* FSData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FSData.xcdatamodel; sourceTree = "<group>"; };
+		F39D03ED16DA94AF00C5C1D5 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		F39D03EE16DA94AF00C5C1D5 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F39D03E916DA91B300C5C1D5 /* CoreData.framework in Frameworks */,
 				F3471AD516D99D8500DA5A67 /* QuartzCore.framework in Frameworks */,
 				F3471AC216D9720300DA5A67 /* CoreLocation.framework in Frameworks */,
 				F3471AC016D96B5100DA5A67 /* MapKit.framework in Frameworks */,
@@ -114,6 +125,8 @@
 				F3471ACF16D99BD300DA5A67 /* FSUser.m */,
 				F3471AC916D98E6500DA5A67 /* FSVenueAnnotation.h */,
 				F3471ACA16D98E6600DA5A67 /* FSVenueAnnotation.m */,
+				F39D03E516DA853500C5C1D5 /* AsyncConnection.h */,
+				F39D03E616DA853500C5C1D5 /* AsyncConnection.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -121,6 +134,8 @@
 		F38C2E0216D8E0A500969D14 = {
 			isa = PBXGroup;
 			children = (
+				F39D03ED16DA94AF00C5C1D5 /* User.h */,
+				F39D03EE16DA94AF00C5C1D5 /* User.m */,
 				F317045C16D8F85F00397BF1 /* MobileCoreServices.framework */,
 				F38C2E1416D8E0A500969D14 /* FSPlaces */,
 				F38C2E0D16D8E0A500969D14 /* Frameworks */,
@@ -139,6 +154,7 @@
 		F38C2E0D16D8E0A500969D14 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F39D03E816DA91B300C5C1D5 /* CoreData.framework */,
 				F3471AD416D99D8500DA5A67 /* QuartzCore.framework */,
 				F3471AC116D9720300DA5A67 /* CoreLocation.framework */,
 				F3471ABF16D96B5100DA5A67 /* MapKit.framework */,
@@ -155,6 +171,7 @@
 				F38C2E2616D8E0A500969D14 /* MainStoryboard.storyboard */,
 				F38C2E1D16D8E0A500969D14 /* AppDelegate.h */,
 				F38C2E1E16D8E0A500969D14 /* AppDelegate.m */,
+				F39D03EA16DA91F500C5C1D5 /* FSData.xcdatamodeld */,
 				F317045E16D908B100397BF1 /* PlacesViewController.h */,
 				F317045F16D908B100397BF1 /* PlacesViewController.m */,
 				F3471AD116D99D5400DA5A67 /* ProfileSwipeView.h */,
@@ -262,6 +279,9 @@
 				F3471AD016D99BD300DA5A67 /* FSUser.m in Sources */,
 				F3471AD316D99D5400DA5A67 /* ProfileSwipeView.m in Sources */,
 				F3500B2A16DA483100267DD4 /* FSLocationManager.m in Sources */,
+				F39D03E716DA853500C5C1D5 /* AsyncConnection.m in Sources */,
+				F39D03EC16DA91F600C5C1D5 /* FSData.xcdatamodeld in Sources */,
+				F39D03EF16DA94AF00C5C1D5 /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +409,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F39D03EA16DA91F500C5C1D5 /* FSData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F39D03EB16DA91F600C5C1D5 /* FSData.xcdatamodel */,
+			);
+			currentVersion = F39D03EB16DA91F600C5C1D5 /* FSData.xcdatamodel */;
+			path = FSData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F38C2E0316D8E0A500969D14 /* Project object */;
 }

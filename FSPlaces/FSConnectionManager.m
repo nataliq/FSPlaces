@@ -11,6 +11,12 @@
 #import "FSConnectionManager.h"
 #import "FSLocationManager.h"
 #import "FSParser.h"
+#import "AsyncConnection.h"
+#import "AppDelegate.h"
+#import "User.h"
+
+#define APPDELEGATE (AppDelegate*)[[UIApplication sharedApplication] delegate]
+#define CONTEXT [APPDELEGATE managedObjectContext]
 
 #define CLIENT_ID               @"KKC2B024TMDITPJ1XGURM4EAC3DKZFCPWY4Y45DVDZ3KWMHF"
 #define CLIENT_SECRET           @"EIFKLIDYZZT50T35RIWNVGNCRDPDZ1A3UR5KKKA1UNW454QD"
@@ -24,7 +30,7 @@
 
 @interface FSConnectionManager () 
 
-@property (strong, nonatomic) FSUser *user;
+@property (strong, nonatomic) User *user;
 
 @end
 
@@ -66,8 +72,9 @@
 
 + (NSArray*) findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm
 {
-	NSArray *venues = nil;
-    
+	__block NSArray *venues = nil;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Connection failed" message:@"Check your internet connection and reload the map" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+
 	// Build GET URL
 	NSMutableString *venuesURL = [[NSMutableString alloc] initWithFormat:FS_VENUES_FORMAT, CLIENT_SECRET, CLIENT_ID];
 	[venuesURL appendFormat:@"&ll=%f,%f", location.coordinate.latitude, location.coordinate.longitude];
@@ -76,19 +83,16 @@
 
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:venuesURL]];
 
-	// Execute URL and read response
-    NSError *error;
-	NSHTTPURLResponse *httpResponse;
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        if ([data length] > 0 && !error ) {
+            venues = [FSParser parseVenues:data];
+        }
+        else if (error){
+            //[alert show];
+            NSLog(@"Error: %@", error.debugDescription);
+        }
+    }];
     
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&httpResponse error:&error];
-    
-    if (error) {
-        NSLog(@"Error: %@", error.debugDescription);
-    }
-    else if(responseData && httpResponse && [httpResponse statusCode] >= 200 && [httpResponse statusCode] < 300)
-            venues = [FSParser parseVenues:responseData];
-			
-	
     return venues;
 }
 
@@ -97,7 +101,7 @@
    return [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation] limit:limit searchterm:nil];
 }
 
-+ (FSUser *)requestCurrentUserInformation
++ (User *)requestCurrentUserInformation
 {
     NSString *userURL = [NSString stringWithFormat:FS_CURRENT_USER_FORMAT, [self accessToken]];
     
@@ -123,8 +127,55 @@
 
 + (void)saveCurrentUser
 {
-    FSUser *user = [self requestCurrentUserInformation];
+    User *user = [self requestCurrentUserInformation];
     
+    AppDelegate* delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *moc = [delegate managedObjectContext];
+    
+    User *currentUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:moc];
+    currentUser = user;
+    
+    [delegate saveContext];
+
+    
+}
+
++ (User *)getUserInfo
+{
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"User" inManagedObjectContext:CONTEXT];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    NSError* error;
+    NSArray *arr = [CONTEXT executeFetchRequest:request error:&error];
+    
+    if (arr && arr.count>0) {
+        return [arr objectAtIndex:0];
+    }
+    
+    return nil;
+
+}
+
++ (void)cancelConnection
+{
+    [self deleteCurrentUserInfo];
+    [self deleteToken];
+}
+
++ (void)deleteCurrentUserInfo
+{
+    User *user = [self getUserInfo];
+    [CONTEXT deleteObject:user];
+    
+    [APPDELEGATE saveContext];
+}
+
++ (void)deleteToken
+{
+    if ([self isActive]) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:TOKEN_KEY];
+    }
 }
 
 @end
