@@ -11,32 +11,63 @@
 #import "FSConnectionManager.h"
 #import "FSLocationManager.h"
 #import "FSParser.h"
-#import "AsyncConnection.h"
 #import "AppDelegate.h"
-#import "User.h"
+#import "PlacesViewController.h"
+#import "FSUser.h"
+#import "FSVenue.h"
+#import "FSRequestFactoryMethod.h"
+#import "FSMediator.h"
 
-#define APPDELEGATE (AppDelegate*)[[UIApplication sharedApplication] delegate]
-#define CONTEXT [APPDELEGATE managedObjectContext]
+#define CALLBACK_URL                @"http://foursquare.webscript.io/"
+#define TOKEN_KEY                   @"access_token"
 
-#define CLIENT_ID               @"KKC2B024TMDITPJ1XGURM4EAC3DKZFCPWY4Y45DVDZ3KWMHF"
-#define CLIENT_SECRET           @"EIFKLIDYZZT50T35RIWNVGNCRDPDZ1A3UR5KKKA1UNW454QD"
-#define CALLBACK_URL            @"http://foursquare.webscript.io/"
-#define TOKEN_KEY               @"access_token"
-
-#define FS_AUTHENTICATE_FORMAT  @"https://foursquare.com/oauth2/authenticate?client_id=%@&response_type=token&redirect_uri=%@"
-#define FS_VENUES_FORMAT		@"https://api.foursquare.com/v2/venues/search?client_secret=%@&client_id=%@"
-#define FS_CURRENT_USER_FORMAT  @"https://api.foursquare.com/v2/users/self?oauth_token=%@"
-
+#define FS_AUTHENTICATE_FORMAT      @"https://foursquare.com/oauth2/authenticate?client_id=%@&response_type=token&redirect_uri=%@"
 
 @interface FSConnectionManager () 
 
 @property (strong, nonatomic) User *user;
 
+@property (strong, nonatomic, readwrite) NSString *clientID;
+@property (strong, nonatomic, readwrite) NSString *clientSecret;
+
+
 @end
 
 @implementation FSConnectionManager
 
-+ (BOOL)isActive
+static  FSConnectionManager* sharedManager = nil;
+
+#pragma mark - Singleton
++ (FSConnectionManager *)sharedManager
+{
+    if (!sharedManager) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            sharedManager = [[FSConnectionManager alloc] init];
+        });
+    }
+    return sharedManager;
+}
+
+- (id)init {
+    
+	self = [super init];
+	if (self)
+    {
+        NSString* plistPath = [[NSBundle mainBundle] pathForResource:@"clientInfo" ofType:@"plist"];
+        NSDictionary *dictPlist = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+        self.clientID = [dictPlist objectForKey:@"clientID"];
+        self.clientSecret = [dictPlist objectForKey:@"clientSecret"];
+        
+        self.delegate = [FSMediator sharedMediator];
+    }
+    
+	return self;
+}
+
+#pragma mark - Application token
+
+- (BOOL)isActive
 {
     if ([[NSUserDefaults standardUserDefaults] objectForKey:TOKEN_KEY]) {
         return YES;
@@ -44,18 +75,18 @@
     return NO;
 }
 
-+ (NSString *)accessToken
+- (NSString *)accessToken
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:TOKEN_KEY];
 }
 
-+ (NSURLRequest *)tokenRequest
+- (NSURLRequest *)tokenRequest
 {
-    NSString *authenticateURLString = [NSString stringWithFormat:FS_AUTHENTICATE_FORMAT, CLIENT_ID, CALLBACK_URL];
+    NSString *authenticateURLString = [NSString stringWithFormat:FS_AUTHENTICATE_FORMAT, self.clientID, CALLBACK_URL];
     return [NSURLRequest requestWithURL:[NSURL URLWithString:authenticateURLString]];
 }
 
-+ (BOOL)extractTockenFromResponseURL:(NSURL *)url
+- (BOOL)extractTokenFromResponseURL:(NSURL *)url
 {
     NSString *URLString = [url absoluteString];
     
@@ -70,47 +101,44 @@
     else return NO;
 }
 
-+ (NSArray*) findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm
+#pragma mark - Api methods
+
+//TODO: send parameters
+- (void) findVenuesNearby:(CLLocation *)location limit:(int)limit searchterm:(NSString *)searchterm
 {
-	__block NSArray *venues = nil;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Connection failed" message:@"Check your internet connection and reload the map" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-
-	// Build GET URL
-	NSMutableString *venuesURL = [[NSMutableString alloc] initWithFormat:FS_VENUES_FORMAT, CLIENT_SECRET, CLIENT_ID];
-	[venuesURL appendFormat:@"&ll=%f,%f", location.coordinate.latitude, location.coordinate.longitude];
-	[venuesURL appendFormat:@"&limit=%d", limit];
-	if(searchterm != nil) [venuesURL appendFormat:@"&q=%@", searchterm];
-
-	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:venuesURL]];
-
-    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        if ([data length] > 0 && !error ) {
-            venues = [FSParser parseVenues:data];
-        }
-        else if (error){
-            //[alert show];
-            NSLog(@"Error: %@", error.debugDescription);
-        }
-    }];
+    NSNumber *limitNumber = [NSNumber numberWithInt:limit];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[location, limitNumber]
+                                                       forKeys:@[@"location", @"limit"]];
+    if (searchterm) {
+        [params setObject:searchterm forKey:@"searchterm"];
+    }
     
-    return venues;
+	FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeVenue parameters:params];
+
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
 }
 
-+ (NSArray*) findVenuesNearbyMeWithLimit:(int)limit
+- (void) findVenuesNearbyMeWithLimit:(int)limit
 {
-   return [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation] limit:limit searchterm:nil];
+   [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation] limit:limit searchterm:nil];
 }
 
-+ (User *)requestCurrentUserInformation
+- (void) findCheckedInVenues
 {
-    NSString *userURL = [NSString stringWithFormat:FS_CURRENT_USER_FORMAT, [self accessToken]];
+    FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeCheckinList parameters:nil];
     
-	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:userURL]];
-    
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
+
+}
+
+//TODO: make like other requests - async
+- (FSUser *)requestCurrentUserInformation
+{
 	// Execute URL and read response
     NSError *error;
 	NSHTTPURLResponse *httpResponse;
     
+    FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeUser parameters:nil];
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&httpResponse error:&error];
     
     if (error) {
@@ -118,64 +146,53 @@
     }
     else if(responseData && httpResponse && [httpResponse statusCode] >= 200 && [httpResponse statusCode] < 300)
     {
-        return [FSParser parseUserInformation:responseData];
+        FSUser *user = [[FSUser alloc] initFromParsedJSON:[FSParser parseJsonResponse:responseData error:error]];
+        [self.delegate setCurrentUser:user];
+        return user;
     }
     
     return nil;
 
 }
 
-+ (void)saveCurrentUser
-{
-    User *user = [self requestCurrentUserInformation];
-    
-    AppDelegate* delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *moc = [delegate managedObjectContext];
-    
-    User *currentUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:moc];
-    currentUser = user;
-    
-    [delegate saveContext];
+#pragma mark - Cancel connection
 
-    
-}
-
-+ (User *)getUserInfo
-{
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"User" inManagedObjectContext:CONTEXT];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDescription];
-    
-    NSError* error;
-    NSArray *arr = [CONTEXT executeFetchRequest:request error:&error];
-    
-    if (arr && arr.count>0) {
-        return [arr objectAtIndex:0];
-    }
-    
-    return nil;
-
-}
-
-+ (void)cancelConnection
+- (void)cancelConnection
 {
     [self deleteCurrentUserInfo];
     [self deleteToken];
-}
-
-+ (void)deleteCurrentUserInfo
-{
-    User *user = [self getUserInfo];
-    [CONTEXT deleteObject:user];
+    [self deleteCoockies];
     
-    [APPDELEGATE saveContext];
+    [self.delegate logIn];
 }
 
-+ (void)deleteToken
+- (void)deleteCurrentUserInfo
+{
+    [self.delegate setCurrentUser:nil];
+    [self.delegate setVenuesToShow:nil];
+}
+
+- (void)deleteCoockies
+{
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies])
+    {
+        NSString* domainName = [cookie domain];
+        NSRange domainRange = [domainName rangeOfString:@"foursquare"];
+        if(domainRange.length > 0)
+        {
+            [storage deleteCookie:cookie];
+        }
+    }
+}
+
+- (void)deleteToken
 {
     if ([self isActive]) {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:TOKEN_KEY];
     }
 }
+
 
 @end

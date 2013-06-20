@@ -11,8 +11,14 @@
 
 @interface ProfileSwipeView ()
 
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageVew;
+@property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+
 @property (nonatomic) CGPoint currentPoint;
 @property (nonatomic) BOOL downDirection;
+@property (nonatomic) BOOL isMoving;
 @property (weak, nonatomic) IBOutlet UIView *footerView;
 
 @end
@@ -32,6 +38,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        
     }
     return self;
 }
@@ -47,6 +54,7 @@
 
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
+    self.isMoving = YES;
 	CGPoint activePoint = [[touches anyObject] locationInView:self];
     
 	// Determine new point based on where the touch is now located
@@ -70,27 +78,38 @@
 	self.center = newPoint;
 }
 
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    CGPoint activePoint = [[touches anyObject] locationInView:self];
-    CGPoint newPoint = CGPointMake(self.center.x, self.center.y + (activePoint.y - self.currentPoint.y));
+    
+    [self positionView: (self.isMoving) ? self.downDirection : !self.isShown];
+    self.isMoving = NO;
+}
+
+- (void)positionView:(BOOL)down
+{
+    CGPoint newPoint;
     
     float midPointY = CGRectGetMidY(self.bounds);
     
-    if (!self.downDirection) {
-        newPoint.y = - midPointY + self.footerView.bounds.size.height;
+    if (down) {
+        newPoint = CGPointMake(self.center.x, midPointY);
     }
-    else
-        newPoint.y = midPointY;
+    else 
+        newPoint = CGPointMake(self.center.x, - midPointY + self.footerView.bounds.size.height);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"FSNotificationShowProfile" object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:self.downDirection] forKey:@"showProfile"]];
+    [self rotateArrowDown:!down];
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^(){
         self.center = newPoint;
     }completion:nil ];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FSNotificationShowProfile" object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:down] forKey:@"showProfile"]];
+    
+    self.isShown = down;
+
 }
 
--(void) setMaskTo:(UIView*)view byRoundingCorners:(UIRectCorner)corners
+- (void) setMaskTo:(UIView*)view byRoundingCorners:(UIRectCorner)corners
 {
     UIBezierPath* rounded = [UIBezierPath bezierPathWithRoundedRect:view.bounds byRoundingCorners:corners cornerRadii:CGSizeMake(50.0, 50.0)];
     
@@ -100,5 +119,33 @@
     view.layer.mask = shape;
 }
 
+- (void)rotateArrowDown:(BOOL)down
+{
+    [UIView animateWithDuration:0.5 animations:^() {
+        float angle = (down) ? 0 : M_PI;
+        self.arrowImageView.transform = CGAffineTransformMakeRotation(angle);
+    }];
+}
+
+- (void)setUserName:(NSString *)userName
+{
+    _userName = userName;
+    self.userNameLabel.text = userName;
+}
+
+- (void)setImageURL:(NSString *)imageURL
+{
+    _imageURL = imageURL;
+    
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(){
+        
+        NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:imageURL]];
+        UIImage* image = [[UIImage alloc] initWithData:imageData];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            self.imageVew.image = image;
+        });
+    });
+}
 
 @end

@@ -7,16 +7,31 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+
+#import "FSConnectionManagerDelegate.h"
 
 @class User;
 
 @interface FSConnectionManager : NSObject
 
-+ (NSURLRequest *)tokenRequest;
-+ (BOOL)extractTockenFromResponseURL:(NSURL *)url;
-+ (BOOL)isActive;
-+ (NSArray*) findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
-+ (NSArray*) findVenuesNearbyMeWithLimit:(int)limit;
-+ (User *)getUserInfo;
-+ (void)saveCurrentUser;
+@property (weak, nonatomic) id<FSConnectionManagerDelegate> delegate;
+@property (strong, nonatomic, readonly) NSString *clientID;
+@property (strong, nonatomic, readonly) NSString *clientSecret;
+
++ (FSConnectionManager *)sharedManager;
+
+- (NSString *)accessToken;
+- (BOOL)isActive;
+
+- (NSURLRequest *)tokenRequest;
+- (BOOL)extractTokenFromResponseURL:(NSURL *)url;
+- (FSUser *)requestCurrentUserInformation;
+- (void)cancelConnection;
+
+- (void)findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
+- (void)findVenuesNearbyMeWithLimit:(int)limit;
+- (void)findCheckedInVenues;
+
+
 @end

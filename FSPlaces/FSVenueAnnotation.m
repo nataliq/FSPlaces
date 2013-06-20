@@ -14,24 +14,18 @@
 
 @implementation FSVenueAnnotation
 
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate name:(NSString *)name andCategoryNames:(NSArray *)names
+- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate name:(NSString *)name url:(NSString *)url andCategoryNames:(NSString *)names
 {
     self = [super init];
     if (self) {
         _name = name;
         _categoryNames = names;
+        _url = url;
         _coordinate = coordinate;
         _title = _name;
         
-        if (_categoryNames) {
-            NSMutableString *subtitleString = [NSMutableString string];
-            for (NSString *name in _categoryNames) {
-                [subtitleString appendFormat:@"%@, ", name];
-            }
-            if (subtitleString.length>0) {
-                _subtitle = [subtitleString substringToIndex:subtitleString.length-2];
-            }
-        }
+        _subtitle = names;
+        
     }
     return self;
 }

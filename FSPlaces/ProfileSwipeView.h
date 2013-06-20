@@ -10,4 +10,10 @@
 
 @interface ProfileSwipeView : UIView
 
+@property (strong, nonatomic) NSString *userName;
+@property (strong, nonatomic) NSString *imageURL;
+@property (nonatomic) BOOL isShown;
+
+- (void)rotateArrowDown:(BOOL)rotate;
+
 @end

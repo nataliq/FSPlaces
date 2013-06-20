@@ -7,9 +7,10 @@
 //
 
 #import "FSLocationManager.h"
+#import "FSMediator.h"
 
 
-@interface FSLocationManager () <CLLocationManagerDelegate>
+@interface FSLocationManager ()
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
@@ -35,7 +36,7 @@ static  FSLocationManager* sharedManager = nil;
 	self = [super init];
 	if (self) {
         _locationManager = [[CLLocationManager alloc] init];
-        _locationManager.delegate = self;
+        _locationManager.delegate = [FSMediator sharedMediator];
         _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         [_locationManager startUpdatingLocation];
@@ -49,12 +50,5 @@ static  FSLocationManager* sharedManager = nil;
 {
     return self.locationManager.location;
 }
-
-#pragma mark - Location Manager Delegate
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation *location = [locations objectAtIndex:0];
-}
-
 
 @end

@@ -16,5 +16,11 @@
 @property (strong, nonatomic) CLLocation *location;
 @property (nonatomic) float distance;
 @property (strong, nonatomic) NSArray *categoryNames;
+@property (strong, nonatomic) NSString *urlAddress;
+
+-(NSString *)categories;
+
+
+- (FSVenue *)initFromParsedJSON:(NSDictionary *)json;
 
 @end

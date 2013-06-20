@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 
 @class FSVenue;
-@class User;
+@class FSUser;
 
 @interface FSParser : NSObject
 
-+ (NSArray *)parseVenues:(NSData *)data;
-+ (User *)parseUserInformation:(NSData *)data;
-+ (FSVenue *)parseVenueInformation:(NSDictionary *)venueInfo;
++ (id)parseJsonResponse:(NSData *)data error:(NSError *)error;
+
++ (NSArray *)venueListFromParsedJSON:(NSDictionary *)json;
+
 
 @end

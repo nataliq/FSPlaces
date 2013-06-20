@@ -18,4 +18,10 @@
 @property (strong, nonatomic) NSString *facebook;
 @property (strong, nonatomic) NSString *email;
 
+@property (strong, nonatomic) NSArray *checkedInVenues;
+
+- (NSString *)fullName;
+
+- (FSUser *)initFromParsedJSON:(NSDictionary *)json;
+
 @end

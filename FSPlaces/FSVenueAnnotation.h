@@ -16,8 +16,9 @@
 @property (nonatomic, readonly) NSString *subtitle;
 
 @property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSArray *categoryNames;
+@property (nonatomic, readonly) NSString *url;
+@property (nonatomic, readonly) NSString *categoryNames;
 
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate name:(NSString *)title andCategoryNames:(NSArray *)names;
+- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate name:(NSString *)name url:(NSString *)url andCategoryNames:(NSString *)names;
 
 @end
