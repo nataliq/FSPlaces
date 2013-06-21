@@ -13,9 +13,7 @@
 
 @protocol FSConnectionManagerDelegate <NSObject>
 
-- (void)setCurrentUser:(FSUser *)user;
 - (void)setVenuesToShow:(NSArray *)venues;
-- (void)logIn;
 - (void)setLastCheckinLocation:(CLLocation *)location;
 
 @end

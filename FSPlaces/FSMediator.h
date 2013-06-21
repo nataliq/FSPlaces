@@ -12,16 +12,19 @@
 
 @class PlacesViewController;
 
-@protocol FSMediator <NSObject, CLLocationManagerDelegate, FSConnectionManagerDelegate>
+@protocol FSMediator <NSObject, CLLocationManagerDelegate, FSConnectionManagerDelegate, UIWebViewDelegate>
 
-@property (nonatomic, assign) PlacesViewController *mainController;
+@property (nonatomic, assign) PlacesViewController *placesController;
+
+- (void)updateUserInformation;
+- (void)updateLocation;
+- (void)profileActionSelected;
 
 @end
 
 @interface FSMediator : NSObject <FSMediator>
 
+@property (nonatomic, assign) PlacesViewController *placesController;
 + (FSMediator *)sharedMediator;
-
-@property (nonatomic, assign) PlacesViewController *mainController;
 
 @end

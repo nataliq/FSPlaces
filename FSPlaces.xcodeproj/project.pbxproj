@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D7C3E4717744E6800D191F8 /* VenueDataSource.m */; };
 		4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */; };
 		4D8CE29C1772E574008D0738 /* clientInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D8CE29B1772E574008D0738 /* clientInfo.plist */; };
 		4D8CE29F1772E6A3008D0738 /* FSMediator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8CE29E1772E6A3008D0738 /* FSMediator.m */; };
@@ -47,6 +48,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D7C3E4617744E6800D191F8 /* VenueDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VenueDataSource.h; sourceTree = "<group>"; };
+		4D7C3E4717744E6800D191F8 /* VenueDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VenueDataSource.m; sourceTree = "<group>"; };
 		4D8CE2981772E2DB008D0738 /* UIAlertView+FSAlerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+FSAlerts.h"; sourceTree = "<group>"; };
 		4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+FSAlerts.m"; sourceTree = "<group>"; };
 		4D8CE29B1772E574008D0738 /* clientInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = clientInfo.plist; sourceTree = "<group>"; };
@@ -126,6 +129,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D7C3E4517744E4D00D191F8 /* Data Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4D7C3E4617744E6800D191F8 /* VenueDataSource.h */,
+				4D7C3E4717744E6800D191F8 /* VenueDataSource.m */,
+			);
+			name = "Data Sources";
+			sourceTree = "<group>";
+		};
 		4D9218761771A080002C1DB9 /* Requests */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,6 +249,7 @@
 				F38C2E1D16D8E0A500969D14 /* AppDelegate.h */,
 				F38C2E1E16D8E0A500969D14 /* AppDelegate.m */,
 				7DBDB1A616DEC1BB0092D061 /* Controllers */,
+				4D7C3E4517744E4D00D191F8 /* Data Sources */,
 				7DBDB1A716DEC1E00092D061 /* Helpers */,
 				F3471ACD16D99BBE00DA5A67 /* Model */,
 				F38C2E1516D8E0A500969D14 /* Supporting Files */,
@@ -356,6 +369,7 @@
 				4D9218821771A53F002C1DB9 /* FSRequest.m in Sources */,
 				4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */,
 				4D8CE29F1772E6A3008D0738 /* FSMediator.m in Sources */,
+				4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

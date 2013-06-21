@@ -26,9 +26,9 @@
 
 - (NSURLRequest *)tokenRequest;
 - (BOOL)extractTokenFromResponseURL:(NSURL *)url;
-- (FSUser *)requestCurrentUserInformation;
 - (void)cancelConnection;
 
+- (FSUser *)requestCurrentUserInformation;
 - (void)findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
 - (void)findVenuesNearbyMeWithLimit:(int)limit;
 - (void)findCheckedInVenues;

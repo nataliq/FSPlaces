@@ -103,7 +103,6 @@ static  FSConnectionManager* sharedManager = nil;
 
 #pragma mark - Api methods
 
-//TODO: send parameters
 - (void) findVenuesNearby:(CLLocation *)location limit:(int)limit searchterm:(NSString *)searchterm
 {
     NSNumber *limitNumber = [NSNumber numberWithInt:limit];
@@ -147,7 +146,6 @@ static  FSConnectionManager* sharedManager = nil;
     else if(responseData && httpResponse && [httpResponse statusCode] >= 200 && [httpResponse statusCode] < 300)
     {
         FSUser *user = [[FSUser alloc] initFromParsedJSON:[FSParser parseJsonResponse:responseData error:error]];
-        [self.delegate setCurrentUser:user];
         return user;
     }
     
@@ -163,13 +161,13 @@ static  FSConnectionManager* sharedManager = nil;
     [self deleteToken];
     [self deleteCoockies];
     
-    [self.delegate logIn];
+    [[FSMediator sharedMediator] updateUserInformation];
 }
 
 - (void)deleteCurrentUserInfo
 {
-    [self.delegate setCurrentUser:nil];
-    [self.delegate setVenuesToShow:nil];
+//    [self.delegate setCurrentUser:nil];
+//    [self.delegate setVenuesToShow:nil];
 }
 
 - (void)deleteCoockies

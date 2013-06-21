@@ -8,6 +8,7 @@
 
 #import "ProfileActionsTableViewController.h"
 #import "FSConnectionManager.h"
+#import "FSMediator.h"
 
 @implementation ProfileActionsTableViewController
 
@@ -44,6 +45,8 @@
                     [[FSConnectionManager sharedManager] findCheckedInVenues];
                     break;
             }
+            
+            [[FSMediator sharedMediator] profileActionSelected];
         }
             break;
         case 1:

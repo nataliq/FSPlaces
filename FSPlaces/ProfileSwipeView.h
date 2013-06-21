@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class FSUser;
+
 @interface ProfileSwipeView : UIView
 
 @property (strong, nonatomic) NSString *userName;
 @property (strong, nonatomic) NSString *imageURL;
 @property (nonatomic) BOOL isShown;
 
+- (void)showAnimated:(BOOL)animated;
 - (void)rotateArrowDown:(BOOL)rotate;
+- (void)populateWithUserInformation:(FSUser *)user;
+- (void)hide;
 
 @end

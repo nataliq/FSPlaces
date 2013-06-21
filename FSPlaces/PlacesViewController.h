@@ -12,22 +12,35 @@
 #import "FSConnectionManagerDelegate.h"
 #import "ProfileSwipeView.h"
 #import "FSMediator.h"
+#import "VenueDataSource.h"
 
-@interface PlacesViewController : UIViewController <FSConnectionManagerDelegate>
+typedef enum
+{
+    PlacesViewStyleMap,
+    PlacesViewStyleTable
+    
+} PlacesViewStyle;
+
+@interface PlacesViewController : UIViewController
 
 
 @property (assign, nonatomic) id<FSMediator> mediator;
 
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) VenueDataSource *venueDataSource;
+
 @property (weak, nonatomic) IBOutlet ProfileSwipeView *profileView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 
 @property (strong, nonatomic) CLLocation *currentLocation;
 @property (strong, nonatomic) CLLocation *lastCheckinLocation;
-@property (strong, nonatomic) FSUser *currentUser;
-@property (strong, nonatomic) NSArray *venuesToShow;
 
+- (void)showLogInForm;
+- (void)showUIWithStyle:(PlacesViewStyle)viewStyle;
+
+- (void)updateMapViewRegion;
+- (void)plotVenuesOnMap;
 
 @end

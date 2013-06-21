@@ -9,6 +9,8 @@
 #import "ProfileSwipeView.h"
 #import <QuartzCore/QuartzCore.h>
 
+#import "FSUser.h"
+
 @interface ProfileSwipeView ()
 
 
@@ -148,4 +150,27 @@
     });
 }
 
+#pragma mark - Populate with information
+
+- (void)populateWithUserInformation:(FSUser *)user
+{
+    self.imageURL = user.photoURL;
+    self.userName = [user fullName];
+    self.isShown = NO;
+
+}
+
+- (void)showAnimated:(BOOL)animated
+{
+    float duration = animated ? 1.0 : 0.0;
+    
+    [UIView animateWithDuration:duration animations:^() {
+        self.hidden = NO;
+    }];
+}
+
+- (void)hide
+{
+    [self positionView:NO];
+}
 @end
