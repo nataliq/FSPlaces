@@ -44,9 +44,15 @@
     return cell;
 }
 
-- (void)updateVenues
+- (void)requestVenues
 {
     [self.connectionManager findVenuesNearbyMeWithLimit:VENUES_LIMIT];
 }
+
+- (void)requestCheckedVenues
+{
+    [self.connectionManager findCheckedInVenues];
+}
+
 
 @end

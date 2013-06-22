@@ -7,24 +7,22 @@
 //
 
 #import "PlacesViewController.h"
-#import "FSConnectionManager.h"
-#import "FSLocationManager.h"
-#import "FSVenue.h"
-#import "FSUser.h"
-#import "FSVenueAnnotation.h"
-#import "UIView+Disable.h"
 #import "FSVenueDetalsViewController.h"
+
+#import "FSVenue.h"
+#import "FSVenueAnnotation.h"
+
+#import "UIView+Disable.h"
 #import "UIAlertView+FSAlerts.h"
 #import "FSMediator.h"
 
 #define MAP_REGION 300
 #define MAP_BIG_REGION 3000
 
-@interface PlacesViewController () <MKMapViewDelegate, UIWebViewDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate>
+@interface PlacesViewController () <MKMapViewDelegate, UITableViewDelegate>
 
 @property (strong, nonatomic, readwrite) UIWebView *webView;
-
-@property (nonatomic) BOOL refreshLocation;
+@property (strong, nonatomic) UIButton *showUserLocationButton;
 
 - (IBAction)showUserLocation;
 - (IBAction)refreshButtonTapped:(id)sender;
@@ -54,11 +52,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"FSNotificationShowProfile" object:nil];
-}
-
 #pragma mark - View controller lifecycle
 
 - (void)viewDidLoad
@@ -75,12 +68,15 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.webView = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     self.navigationController.navigationBarHidden = YES;
+    [super viewWillAppear:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,11 +89,11 @@
 
 - (void)customizeToolbar
 {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [button setImage:[UIImage imageNamed:@"locationIcon.png"] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(showUserLocation) forControlEvents:UIControlEventTouchUpInside];
+    self.showUserLocationButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [self.showUserLocationButton setImage:[UIImage imageNamed:@"locationIcon.png"] forState:UIControlStateNormal];
+    [self.showUserLocationButton addTarget:self action:@selector(showUserLocation) forControlEvents:UIControlEventTouchUpInside];
     NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-    [items insertObject:[[UIBarButtonItem alloc] initWithCustomView:button] atIndex:0];
+    [items insertObject:[[UIBarButtonItem alloc] initWithCustomView:self.showUserLocationButton] atIndex:0];
     [self.toolbar setItems:items];
 
 }
@@ -215,6 +211,7 @@
         {
             self.tableView.hidden = YES;
             self.map.hidden = NO;
+            self.showUserLocationButton.hidden = NO;
             [self plotVenuesOnMap];
             break;
         }
@@ -222,6 +219,7 @@
         {
             self.tableView.hidden = NO;
             self.map.hidden = YES;
+            self.showUserLocationButton.hidden = YES;
             [self.tableView reloadData];
             break;
         }
@@ -232,20 +230,27 @@
 }
 
 - (IBAction)refreshButtonTapped:(id)sender {
-    //[self.mediator refresh];
+    [self.mediator updateUserInformation];
+    [self.mediator updateLocation];
 }
 
 - (IBAction)showUserLocation
 {
-    if (self.lastCheckinLocation) {
-        [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_BIG_REGION, MAP_BIG_REGION) animated:YES];
+    if (self.currentLocation) {
+        if (self.lastCheckinLocation) {
+            [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_BIG_REGION, MAP_BIG_REGION) animated:YES];
+        }
+        else if (self.currentLocation) {
+            [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_REGION, MAP_REGION) animated:YES];
+        }
+        
+        self.map.showsUserLocation = YES;
+
     }
-    else if (self.currentLocation) {
-        [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_REGION, MAP_REGION) animated:YES];
+    else {
+        [[UIAlertView locationErrorAlert] show];
     }
     
-    self.map.showsUserLocation = YES;
-
 }
 
 
@@ -270,5 +275,6 @@
         
     }];
 }
+
 
 @end

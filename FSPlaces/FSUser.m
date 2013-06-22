@@ -25,8 +25,7 @@
         self.photoURL = [userInfo objectForKey:@"photo"];
         
         NSDictionary *contactInfo = [userInfo objectForKey:@"contact"];
-        self.facebook = [contactInfo objectForKey:@"facebook"];
-        self.email = [contactInfo objectForKey:@"email"];
+        self.contacts = [ContactInformation initFromParsedJSON:contactInfo];
     }
     
     return self;

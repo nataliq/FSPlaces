@@ -35,8 +35,10 @@
                 NSArray * result = [FSParser venueListFromParsedJSON:[FSParser parseJsonResponse:data error:error]];
                 
                 dispatch_async(dispatch_get_main_queue(), ^(){
-                    [delegate setVenuesToShow:result];
                     [delegate setLastCheckinLocation:nil];
+                    [delegate setVenuesToShow:result];
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"GetVenuesRequestResolved" object:nil];
                 });
                 
             }

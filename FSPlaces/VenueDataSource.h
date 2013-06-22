@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSArray *venues;
 @property (assign, nonatomic) FSConnectionManager *connectionManager;
 
-- (void)updateVenues;
+- (void)requestVenues;
+- (void)requestCheckedVenues;
 
 @end

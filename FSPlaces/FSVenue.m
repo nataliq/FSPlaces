@@ -20,24 +20,36 @@
         self.identifier = [json objectForKey:@"id"];
         
         NSDictionary *locationInfo = [json objectForKey:@"location"];
-        self.location = [[CLLocation alloc] initWithLatitude:[[locationInfo objectForKey:@"lat"] floatValue] longitude:[[locationInfo objectForKey:@"lng"] floatValue]];
-        self.distance = [[locationInfo objectForKey:@"distance"] floatValue];
+        [self initLocation:locationInfo];
+
         self.urlAddress = [json objectForKey:@"canonicalUrl"];
         
-        NSMutableArray *categoryNames = [NSMutableArray array];
         NSArray *categories = [json objectForKey:@"categories"];
-        for (NSDictionary *category in categories) {
-            [categoryNames addObject:[category objectForKey:@"name"]];
-        }
-        self.categoryNames = [NSArray arrayWithArray:categoryNames];
-
+        [self initCategoryNames: categories];
     }
     
     return self;
 
 }
 
--(NSString *)categories
+- (void)initLocation:(NSDictionary *)locationInfo
+{
+    self.location = [[CLLocation alloc] initWithLatitude:[[locationInfo objectForKey:@"lat"] floatValue] longitude:[[locationInfo objectForKey:@"lng"] floatValue]];
+    self.distance = [[locationInfo objectForKey:@"distance"] floatValue];
+}
+
+- (void)initCategoryNames:(NSArray *)categories
+{
+    NSMutableArray *categoryNames = [NSMutableArray array];
+    
+    for (NSDictionary *category in categories) {
+        [categoryNames addObject:[category objectForKey:@"name"]];
+    }
+    self.categoryNames = [NSArray arrayWithArray:categoryNames];
+
+}
+
+- (NSString *)categories
 {
     if (_categoryNames) {
         NSMutableString *subtitleString = [NSMutableString string];

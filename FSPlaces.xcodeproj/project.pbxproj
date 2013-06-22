@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1495EFC817753839002EDF1D /* ContactInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFC717753839002EDF1D /* ContactInformation.m */; };
+		1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFCA17753F38002EDF1D /* ProfileView.m */; };
 		4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D7C3E4717744E6800D191F8 /* VenueDataSource.m */; };
 		4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */; };
 		4D8CE29C1772E574008D0738 /* clientInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D8CE29B1772E574008D0738 /* clientInfo.plist */; };
@@ -48,6 +50,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1495EFC617753839002EDF1D /* ContactInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactInformation.h; sourceTree = "<group>"; };
+		1495EFC717753839002EDF1D /* ContactInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInformation.m; sourceTree = "<group>"; };
+		1495EFC917753F38002EDF1D /* ProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileView.h; sourceTree = "<group>"; };
+		1495EFCA17753F38002EDF1D /* ProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileView.m; sourceTree = "<group>"; };
 		4D7C3E4617744E6800D191F8 /* VenueDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VenueDataSource.h; sourceTree = "<group>"; };
 		4D7C3E4717744E6800D191F8 /* VenueDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VenueDataSource.m; sourceTree = "<group>"; };
 		4D8CE2981772E2DB008D0738 /* UIAlertView+FSAlerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+FSAlerts.h"; sourceTree = "<group>"; };
@@ -174,6 +180,8 @@
 				7DBDB1A116DE954E0092D061 /* UIView+Disable.m */,
 				4D8CE2981772E2DB008D0738 /* UIAlertView+FSAlerts.h */,
 				4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */,
+				1495EFC917753F38002EDF1D /* ProfileView.h */,
+				1495EFCA17753F38002EDF1D /* ProfileView.m */,
 				F3471AD116D99D5400DA5A67 /* ProfileSwipeView.h */,
 				F3471AD216D99D5400DA5A67 /* ProfileSwipeView.m */,
 				7D61192F16DDF82C005AFBEE /* FSConnectionManagerDelegate.h */,
@@ -208,6 +216,8 @@
 				F3471ACF16D99BD300DA5A67 /* FSUser.m */,
 				F3471AC916D98E6500DA5A67 /* FSVenueAnnotation.h */,
 				F3471ACA16D98E6600DA5A67 /* FSVenueAnnotation.m */,
+				1495EFC617753839002EDF1D /* ContactInformation.h */,
+				1495EFC717753839002EDF1D /* ContactInformation.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -370,6 +380,8 @@
 				4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */,
 				4D8CE29F1772E6A3008D0738 /* FSMediator.m in Sources */,
 				4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */,
+				1495EFC817753839002EDF1D /* ContactInformation.m in Sources */,
+				1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

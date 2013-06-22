@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-#import "FSConnectionManagerDelegate.h"
-#import "ProfileSwipeView.h"
 #import "FSMediator.h"
+
+#import "ProfileSwipeView.h"
 #import "VenueDataSource.h"
 
 typedef enum
@@ -38,8 +38,6 @@ typedef enum
 @property (strong, nonatomic) CLLocation *lastCheckinLocation;
 
 - (void)showLogInForm;
-- (void)showUIWithStyle:(PlacesViewStyle)viewStyle;
-
 - (void)updateMapViewRegion;
 - (void)plotVenuesOnMap;
 

@@ -17,6 +17,7 @@
 #import "FSVenue.h"
 #import "FSRequestFactoryMethod.h"
 #import "FSMediator.h"
+#import "UIAlertView+FSAlerts.h"
 
 #define CALLBACK_URL                @"http://foursquare.webscript.io/"
 #define TOKEN_KEY                   @"access_token"
@@ -105,16 +106,20 @@ static  FSConnectionManager* sharedManager = nil;
 
 - (void) findVenuesNearby:(CLLocation *)location limit:(int)limit searchterm:(NSString *)searchterm
 {
-    NSNumber *limitNumber = [NSNumber numberWithInt:limit];
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[location, limitNumber]
-                                                       forKeys:@[@"location", @"limit"]];
-    if (searchterm) {
-        [params setObject:searchterm forKey:@"searchterm"];
-    }
-    
-	FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeVenue parameters:params];
+    if (location) {
+        NSNumber *limitNumber = [NSNumber numberWithInt:limit];
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[location, limitNumber]
+                                                                         forKeys:@[@"location", @"limit"]];
+        if (searchterm) {
+            [params setObject:searchterm forKey:@"searchterm"];
+        }
+        
+        FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeVenue parameters:params];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
 
-    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
+    }
+    else [[UIAlertView locationErrorAlert] show];
 }
 
 - (void) findVenuesNearbyMeWithLimit:(int)limit

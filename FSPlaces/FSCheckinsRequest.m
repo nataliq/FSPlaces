@@ -33,6 +33,7 @@
                     }
                     
                     [delegate setVenuesToShow:array];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"GetCheckedVenuesRequestResolved" object:nil];
                 });
                 
             }

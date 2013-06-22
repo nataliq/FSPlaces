@@ -12,6 +12,11 @@
 
 @class PlacesViewController;
 
+typedef enum {
+    ShowVenuesTypeAround = 0,
+    ShowVenuesTypeChecked
+}ShowVenuesType;
+
 @protocol FSMediator <NSObject, CLLocationManagerDelegate, FSConnectionManagerDelegate, UIWebViewDelegate>
 
 @property (nonatomic, assign) PlacesViewController *placesController;
@@ -19,12 +24,14 @@
 - (void)updateUserInformation;
 - (void)updateLocation;
 - (void)profileActionSelected;
+- (ShowVenuesType)shownType;
 
 @end
 
 @interface FSMediator : NSObject <FSMediator>
 
 @property (nonatomic, assign) PlacesViewController *placesController;
+
 + (FSMediator *)sharedMediator;
 
 @end

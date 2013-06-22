@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ContactInformation.h"
+
 @interface FSUser : NSObject
 
 @property (strong, nonatomic) NSString *identifier;
@@ -15,8 +17,7 @@
 @property (strong, nonatomic) NSString *lName;
 @property (strong, nonatomic) NSString *photoURL;
 @property (strong, nonatomic) NSString *city;
-@property (strong, nonatomic) NSString *facebook;
-@property (strong, nonatomic) NSString *email;
+@property (strong, nonatomic) ContactInformation *contacts;
 
 @property (strong, nonatomic) NSArray *checkedInVenues;
 

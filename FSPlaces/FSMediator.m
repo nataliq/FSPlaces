@@ -18,6 +18,7 @@
 
 @property (strong, nonatomic) FSUser *currentUser;
 @property (assign, nonatomic) PlacesViewStyle shownViewStyle;
+@property (assign, nonatomic) ShowVenuesType shownVenueType;
 
 @end
 
@@ -48,7 +49,8 @@ static  FSMediator* sharedMediator = nil;
     
 	return self;
 }
-#pragma mark - web view delegate
+
+#pragma mark - Web view delegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -88,7 +90,7 @@ static  FSMediator* sharedMediator = nil;
     });
 }
 
-#pragma mark - setters
+#pragma mark - Connection manager delegate
 
 - (void)setVenuesToShow:(NSArray *)venues
 {
@@ -107,6 +109,7 @@ static  FSMediator* sharedMediator = nil;
 - (void)setLastCheckinLocation:(CLLocation *)location
 {
     [self.placesController setLastCheckinLocation:location];
+    self.shownVenueType = location ? ShowVenuesTypeAround : ShowVenuesTypeChecked;
 }
 
 #pragma mark - update places view controller ui
@@ -133,19 +136,27 @@ static  FSMediator* sharedMediator = nil;
 - (void)updateLocation
 {
     self.placesController.currentLocation = [[FSLocationManager sharedManager] getCurrentLocation];
-    [self.placesController updateMapViewRegion];
-    [self.placesController.venueDataSource updateVenues];
-
-}
-
-- (void)showMap
-{
-    [self.placesController showUIWithStyle:PlacesViewStyleMap];
     
+    if (self.placesController.currentLocation) {
+        [self.placesController updateMapViewRegion];
+        [self.placesController.venueDataSource requestVenues];
+    }
+    else {
+        [self.placesController.venueDataSource requestCheckedVenues];
+        self.shownVenueType = ShowVenuesTypeChecked;
+        
+    }
+
 }
 
 - (void)profileActionSelected
 {
     [self.placesController.profileView hide];
 }
+
+- (ShowVenuesType)shownType
+{
+    return self.shownVenueType;
+}
+
 @end
