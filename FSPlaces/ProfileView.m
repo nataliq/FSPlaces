@@ -8,6 +8,13 @@
 
 #import "ProfileView.h"
 
+@interface ProfileView ()
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageVew;
+@property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+
+@end
+
 @implementation ProfileView
 
 - (id)initWithFrame:(CGRect)frame
@@ -19,13 +26,46 @@
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+
+
+- (void)setUserName:(NSString *)userName
 {
-    // Drawing code
+    _userName = userName;
+    self.userNameLabel.text = userName;
 }
-*/
+
+- (void)setImageURL:(NSString *)imageURL
+{
+    _imageURL = imageURL;
+    
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(){
+        
+        NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:imageURL]];
+        UIImage* image = [[UIImage alloc] initWithData:imageData];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            self.imageVew.image = image;
+        });
+    });
+}
+
+#pragma mark - Populate with information
+
+- (void)populateWithUserInformation:(FSUser *)user
+{
+    self.imageURL = user.photoURL;
+    self.userName = [user fullName];
+    
+}
+
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    float duration = animated ? 1.0 : 0.0;
+    
+    [UIView animateWithDuration:duration animations:^() {
+        self.hidden = hidden;
+    }];
+
+}
 
 @end

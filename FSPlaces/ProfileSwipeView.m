@@ -13,37 +13,15 @@
 
 @interface ProfileSwipeView ()
 
-
-@property (weak, nonatomic) IBOutlet UIImageView *imageVew;
-@property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
-
 @property (nonatomic) CGPoint currentPoint;
 @property (nonatomic) BOOL downDirection;
 @property (nonatomic) BOOL isMoving;
-@property (weak, nonatomic) IBOutlet UIView *footerView;
+
 
 @end
 
 @implementation ProfileSwipeView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
--(id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        
-    }
-    return self;
-}
 
 - (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
@@ -111,15 +89,6 @@
 
 }
 
-- (void) setMaskTo:(UIView*)view byRoundingCorners:(UIRectCorner)corners
-{
-    UIBezierPath* rounded = [UIBezierPath bezierPathWithRoundedRect:view.bounds byRoundingCorners:corners cornerRadii:CGSizeMake(50.0, 50.0)];
-    
-    CAShapeLayer* shape = [[CAShapeLayer alloc] init];
-    [shape setPath:rounded.CGPath];
-    
-    view.layer.mask = shape;
-}
 
 - (void)rotateArrowDown:(BOOL)down
 {
@@ -129,48 +98,21 @@
     }];
 }
 
-- (void)setUserName:(NSString *)userName
-{
-    _userName = userName;
-    self.userNameLabel.text = userName;
-}
-
-- (void)setImageURL:(NSString *)imageURL
-{
-    _imageURL = imageURL;
-    
-    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(){
-        
-        NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:imageURL]];
-        UIImage* image = [[UIImage alloc] initWithData:imageData];
-        
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            self.imageVew.image = image;
-        });
-    });
-}
-
-#pragma mark - Populate with information
-
-- (void)populateWithUserInformation:(FSUser *)user
-{
-    self.imageURL = user.photoURL;
-    self.userName = [user fullName];
-    self.isShown = NO;
-
-}
-
-- (void)showAnimated:(BOOL)animated
-{
-    float duration = animated ? 1.0 : 0.0;
-    
-    [UIView animateWithDuration:duration animations:^() {
-        self.hidden = NO;
-    }];
-}
-
-- (void)hide
+#pragma mark - Swipe view protocol
+- (void)swipeUp
 {
     [self positionView:NO];
 }
+
+- (void)swipeDown
+{
+    [self positionView:YES];
+}
+
+- (void)setSwipingEnabled:(BOOL)enabled
+{
+    self.userInteractionEnabled = enabled;
+}
+
+
 @end

@@ -126,7 +126,7 @@ static  FSMediator* sharedMediator = nil;
         
         if (self.currentUser) {
             [self.placesController.profileView populateWithUserInformation:self.currentUser];
-            [self.placesController.profileView showAnimated:YES];
+            [self.placesController.profileView setHidden:NO animated:YES];
         }
     
     }
@@ -151,7 +151,7 @@ static  FSMediator* sharedMediator = nil;
 
 - (void)profileActionSelected
 {
-    [self.placesController.profileView hide];
+    [self.placesController.profileView swipeUp];
 }
 
 - (ShowVenuesType)shownType

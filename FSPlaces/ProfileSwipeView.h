@@ -7,18 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ProfileView.h"
 
-@class FSUser;
+@protocol SwipeView <NSObject>
 
-@interface ProfileSwipeView : UIView
+- (void)swipeUp;
+- (void)swipeDown;
+- (void)setSwipingEnabled:(BOOL)enabled;
 
-@property (strong, nonatomic) NSString *userName;
-@property (strong, nonatomic) NSString *imageURL;
+@end
+
+@interface ProfileSwipeView : ProfileView <SwipeView>
+
 @property (nonatomic) BOOL isShown;
 
-- (void)showAnimated:(BOOL)animated;
 - (void)rotateArrowDown:(BOOL)rotate;
-- (void)populateWithUserInformation:(FSUser *)user;
-- (void)hide;
+- (void)swipeUp;
+- (void)swipeDown;
+- (void)setSwipingEnabled:(BOOL)enabled;
 
 @end

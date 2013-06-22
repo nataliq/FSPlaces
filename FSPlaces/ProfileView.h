@@ -7,10 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FSUser.h"
 
 @interface ProfileView : UIView
 
 @property (strong, nonatomic) NSString *userName;
 @property (strong, nonatomic) NSString *imageURL;
+
+@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (weak, nonatomic) IBOutlet UIView *footerView;
+
+
+- (void)populateWithUserInformation:(FSUser *)user;
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end

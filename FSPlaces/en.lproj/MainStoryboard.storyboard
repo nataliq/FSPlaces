@@ -126,8 +126,8 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="arrowImageView" destination="S5N-8y-eLl" id="JMz-e2-2xt"/>
-                                    <outlet property="footerView" destination="Mo2-p4-rwx" id="0Ef-8h-x7i"/>
-                                    <outlet property="imageVew" destination="vcH-CA-8wn" id="wXO-qa-Pg8"/>
+                                    <outlet property="footerView" destination="Mo2-p4-rwx" id="yVK-d1-5oL"/>
+                                    <outlet property="imageVew" destination="vcH-CA-8wn" id="Kvb-AW-Foe"/>
                                     <outlet property="userNameLabel" destination="DFT-46-iPO" id="3hJ-Mw-fwX"/>
                                 </connections>
                             </view>
@@ -324,6 +324,45 @@
         <image name="1099932_orig.png" width="90" height="90"/>
         <image name="up.png" width="21" height="25"/>
     </resources>
+    <classes>
+        <class className="FSVenueDetalsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FSVenueDetalsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PlacesViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlacesViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshButtonTapped:"/>
+                <relationship kind="action" name="segmentChanged:"/>
+                <relationship kind="action" name="showUserLocation"/>
+                <relationship kind="outlet" name="map" candidateClass="MKMapView"/>
+                <relationship kind="outlet" name="profileView" candidateClass="ProfileSwipeView"/>
+                <relationship kind="outlet" name="segmentedControl" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="ProfileActionsTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileActionsTableViewController.h"/>
+        </class>
+        <class className="ProfileSwipeView" superclassName="ProfileView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileSwipeView.h"/>
+        </class>
+        <class className="ProfileView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileView.h"/>
+            <relationships>
+                <relationship kind="outlet" name="arrowImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="imageVew" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="userNameLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
