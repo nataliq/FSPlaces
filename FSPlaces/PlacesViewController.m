@@ -104,6 +104,8 @@
 {
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.delegate = self.mediator;
+    self.webView.opaque = NO;
+    self.webView.backgroundColor = [UIColor clearColor];
     [self.webView loadRequest:[[FSConnectionManager sharedManager] tokenRequest]];
     
     [self.view addSubview:self.webView];

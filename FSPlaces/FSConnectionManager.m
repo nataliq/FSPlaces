@@ -171,8 +171,7 @@ static  FSConnectionManager* sharedManager = nil;
 
 - (void)deleteCurrentUserInfo
 {
-//    [self.delegate setCurrentUser:nil];
-//    [self.delegate setVenuesToShow:nil];
+    [[FSMediator sharedMediator] setVenuesToShow:nil];
 }
 
 - (void)deleteCoockies

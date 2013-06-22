@@ -141,7 +141,7 @@ static  FSMediator* sharedMediator = nil;
         [self.placesController updateMapViewRegion];
         [self.placesController.venueDataSource requestVenues];
     }
-    else {
+    else if([[FSConnectionManager sharedManager] isActive]){
         [self.placesController.venueDataSource requestCheckedVenues];
         self.shownVenueType = ShowVenuesTypeChecked;
         
