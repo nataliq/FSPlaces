@@ -12,5 +12,6 @@
 
 + (UIAlertView *)noVenuesAlert;
 + (UIAlertView *)locationErrorAlert;
++ (UIAlertView *)checkedInAlertForVenue:(NSString *)venueName success:(BOOL)success;
 
 @end

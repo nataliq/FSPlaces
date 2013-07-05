@@ -12,7 +12,8 @@
 typedef enum {
     FSRequestTypeUser,
     FSRequestTypeVenue,
-    FSRequestTypeCheckinList
+    FSRequestTypeCheckinList,
+    FSRequestTypeCheckIn
 } FSRequestType;
 
 @interface FSRequestFactoryMethod : NSObject

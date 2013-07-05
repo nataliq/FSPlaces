@@ -14,7 +14,7 @@ typedef void (^ComplitionHandler)(NSURLResponse *response, NSData *data, NSError
 @class FSUser;
 
 
-@interface FSRequest : NSURLRequest
+@interface FSRequest : NSMutableURLRequest
 
 @property (nonatomic, copy) ComplitionHandler handlerBlock;
 @property (nonatomic, strong, readonly) NSDictionary *params;

@@ -14,13 +14,6 @@
 #import "ProfileSwipeView.h"
 #import "VenueDataSource.h"
 
-typedef enum
-{
-    PlacesViewStyleMap,
-    PlacesViewStyleTable
-    
-} PlacesViewStyle;
-
 @interface PlacesViewController : UIViewController
 
 

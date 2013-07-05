@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FSVenue.h"
 
 @interface FSVenueDetalsViewController : UIViewController
 
-@property (strong, nonatomic) NSString *url;
+@property (strong, nonatomic) FSVenue *venue;
 
 @end

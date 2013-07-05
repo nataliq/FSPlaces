@@ -61,6 +61,7 @@
     self.tableView.dataSource = self.venueDataSource;
     
     [self customizeToolbar];
+    
     [self.mediator updateUserInformation];
     [self.mediator updateLocation];
 }
@@ -73,10 +74,10 @@
     self.webView = nil;
 }
 
--(void)viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    self.navigationController.navigationBarHidden = YES;
-    [super viewWillAppear:YES];
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -103,6 +104,7 @@
 - (void)showLogInForm
 {
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.webView.delegate = self.mediator;
     self.webView.opaque = NO;
     self.webView.backgroundColor = [UIColor clearColor];
@@ -176,7 +178,13 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
     FSVenueDetalsViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"VenueDetails"];
     
-    [controller setUrl:annotation.url];
+    FSVenue *matchedVenue = nil;
+    for (FSVenue *venue in self.venueDataSource.venues) {
+        if ([venue.name isEqualToString:annotation.name]) {
+            matchedVenue = venue;
+        }
+    }
+    [controller setVenue:matchedVenue];
     controller.title = annotation.name;
     
     [self.navigationController pushViewController:controller animated:YES];
@@ -194,7 +202,7 @@
     if ([segue.identifier isEqualToString:@"VenueDetails"]) {
         FSVenueDetalsViewController *controller = segue.destinationViewController;
         FSVenue *venue = [self.venueDataSource.venues objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
-        [controller setUrl:venue.urlAddress];
+        [controller setVenue:venue];
         controller.title = venue.name;
     }
 }
@@ -228,6 +236,8 @@
         default:
             break;
     }
+    
+    [self.mediator setShownViewStyle:viewStyle];
 
 }
 

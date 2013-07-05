@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1495EFC817753839002EDF1D /* ContactInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFC717753839002EDF1D /* ContactInformation.m */; };
 		1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFCA17753F38002EDF1D /* ProfileView.m */; };
+		4D2EC97D177DF67D00126FDD /* venues.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D2EC97C177DF67D00126FDD /* venues.plist */; };
 		4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D7C3E4717744E6800D191F8 /* VenueDataSource.m */; };
 		4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */; };
 		4D8CE29C1772E574008D0738 /* clientInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D8CE29B1772E574008D0738 /* clientInfo.plist */; };
@@ -20,6 +21,10 @@
 		4D92187C1771A343002C1DB9 /* FSVenuesRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D92187B1771A343002C1DB9 /* FSVenuesRequest.m */; };
 		4D92187F1771A358002C1DB9 /* FSCheckinsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D92187E1771A358002C1DB9 /* FSCheckinsRequest.m */; };
 		4D9218821771A53F002C1DB9 /* FSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9218811771A53F002C1DB9 /* FSRequest.m */; };
+		4DC8B2D11785D08D00F6536E /* icon-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DC8B2CF1785D08D00F6536E /* icon-back.png */; };
+		4DC8B2D21785D08D00F6536E /* icon-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DC8B2D01785D08D00F6536E /* icon-back@2x.png */; };
+		4DC8B2D51785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B2D41785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.m */; };
+		4DC8B2D81785DF4B00F6536E /* FSCheckInPostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B2D71785DF4B00F6536E /* FSCheckInPostRequest.m */; };
 		7D61193216DE309C005AFBEE /* locationIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D61193016DE309C005AFBEE /* locationIcon.png */; };
 		7D61193316DE309C005AFBEE /* locationIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D61193116DE309C005AFBEE /* locationIcon@2x.png */; };
 		7D61193516DE6AB1005AFBEE /* 1099932_orig.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D61193416DE6AB1005AFBEE /* 1099932_orig.png */; };
@@ -56,6 +61,7 @@
 		1495EFC717753839002EDF1D /* ContactInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInformation.m; sourceTree = "<group>"; };
 		1495EFC917753F38002EDF1D /* ProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileView.h; sourceTree = "<group>"; };
 		1495EFCA17753F38002EDF1D /* ProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileView.m; sourceTree = "<group>"; };
+		4D2EC97C177DF67D00126FDD /* venues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = venues.plist; sourceTree = "<group>"; };
 		4D7C3E4617744E6800D191F8 /* VenueDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VenueDataSource.h; sourceTree = "<group>"; };
 		4D7C3E4717744E6800D191F8 /* VenueDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VenueDataSource.m; sourceTree = "<group>"; };
 		4D8CE2981772E2DB008D0738 /* UIAlertView+FSAlerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+FSAlerts.h"; sourceTree = "<group>"; };
@@ -75,6 +81,12 @@
 		4D92187E1771A358002C1DB9 /* FSCheckinsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCheckinsRequest.m; sourceTree = "<group>"; };
 		4D9218801771A53F002C1DB9 /* FSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRequest.h; sourceTree = "<group>"; };
 		4D9218811771A53F002C1DB9 /* FSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSRequest.m; sourceTree = "<group>"; };
+		4DC8B2CF1785D08D00F6536E /* icon-back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-back.png"; sourceTree = "<group>"; };
+		4DC8B2D01785D08D00F6536E /* icon-back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-back@2x.png"; sourceTree = "<group>"; };
+		4DC8B2D31785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+CustomBarButtonItem.h"; sourceTree = "<group>"; };
+		4DC8B2D41785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+CustomBarButtonItem.m"; sourceTree = "<group>"; };
+		4DC8B2D61785DF4B00F6536E /* FSCheckInPostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCheckInPostRequest.h; sourceTree = "<group>"; };
+		4DC8B2D71785DF4B00F6536E /* FSCheckInPostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCheckInPostRequest.m; sourceTree = "<group>"; };
 		7D61192F16DDF82C005AFBEE /* FSConnectionManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSConnectionManagerDelegate.h; sourceTree = "<group>"; };
 		7D61193016DE309C005AFBEE /* locationIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationIcon.png; sourceTree = "<group>"; };
 		7D61193116DE309C005AFBEE /* locationIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "locationIcon@2x.png"; sourceTree = "<group>"; };
@@ -159,8 +171,24 @@
 				4D92187B1771A343002C1DB9 /* FSVenuesRequest.m */,
 				4D92187D1771A358002C1DB9 /* FSCheckinsRequest.h */,
 				4D92187E1771A358002C1DB9 /* FSCheckinsRequest.m */,
+				4DC8B2D61785DF4B00F6536E /* FSCheckInPostRequest.h */,
+				4DC8B2D71785DF4B00F6536E /* FSCheckInPostRequest.m */,
 			);
 			name = Requests;
+			sourceTree = "<group>";
+		};
+		4DC8B2CE1785D06400F6536E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7D61193416DE6AB1005AFBEE /* 1099932_orig.png */,
+				7D61193016DE309C005AFBEE /* locationIcon.png */,
+				7D61193116DE309C005AFBEE /* locationIcon@2x.png */,
+				4DC8B2CF1785D08D00F6536E /* icon-back.png */,
+				4DC8B2D01785D08D00F6536E /* icon-back@2x.png */,
+				F3471AEA16D9B48F00DA5A67 /* up.png */,
+				F3471AEB16D9B48F00DA5A67 /* up@2x.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		7DBDB1A616DEC1BB0092D061 /* Controllers */ = {
@@ -182,6 +210,8 @@
 				F3471ACC16D99BB600DA5A67 /* Managers */,
 				7DBDB1A016DE954E0092D061 /* UIView+Disable.h */,
 				7DBDB1A116DE954E0092D061 /* UIView+Disable.m */,
+				4DC8B2D31785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.h */,
+				4DC8B2D41785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.m */,
 				4D8CE2981772E2DB008D0738 /* UIAlertView+FSAlerts.h */,
 				4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */,
 				1495EFC917753F38002EDF1D /* ProfileView.h */,
@@ -276,11 +306,7 @@
 		F38C2E1516D8E0A500969D14 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				7D61193416DE6AB1005AFBEE /* 1099932_orig.png */,
-				7D61193016DE309C005AFBEE /* locationIcon.png */,
-				7D61193116DE309C005AFBEE /* locationIcon@2x.png */,
-				F3471AEA16D9B48F00DA5A67 /* up.png */,
-				F3471AEB16D9B48F00DA5A67 /* up@2x.png */,
+				4DC8B2CE1785D06400F6536E /* Resources */,
 				F38C2E1616D8E0A500969D14 /* FSPlaces-Info.plist */,
 				F38C2E1716D8E0A500969D14 /* InfoPlist.strings */,
 				F38C2E1A16D8E0A500969D14 /* main.m */,
@@ -289,6 +315,7 @@
 				F38C2E2216D8E0A500969D14 /* Default@2x.png */,
 				F38C2E2416D8E0A500969D14 /* Default-568h@2x.png */,
 				4D8CE29B1772E574008D0738 /* clientInfo.plist */,
+				4D2EC97C177DF67D00126FDD /* venues.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -357,6 +384,9 @@
 				4D8CE29C1772E574008D0738 /* clientInfo.plist in Resources */,
 				4D8EC6D71775843F0029C8FF /* foursquare-icon.png in Resources */,
 				4D8EC6D9177586570029C8FF /* Default.png in Resources */,
+				4D2EC97D177DF67D00126FDD /* venues.plist in Resources */,
+				4DC8B2D11785D08D00F6536E /* icon-back.png in Resources */,
+				4DC8B2D21785D08D00F6536E /* icon-back@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +420,8 @@
 				4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */,
 				1495EFC817753839002EDF1D /* ContactInformation.m in Sources */,
 				1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */,
+				4DC8B2D51785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.m in Sources */,
+				4DC8B2D81785DF4B00F6536E /* FSCheckInPostRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

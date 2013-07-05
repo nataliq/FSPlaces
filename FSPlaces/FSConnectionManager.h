@@ -11,7 +11,7 @@
 
 #import "FSConnectionManagerDelegate.h"
 
-@class User;
+@class User, FSVenue;
 
 @interface FSConnectionManager : NSObject
 
@@ -32,6 +32,8 @@
 - (void)findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
 - (void)findVenuesNearbyMeWithLimit:(int)limit;
 - (void)findCheckedInVenues;
+
+- (void)checkInInVenue:(FSVenue *)venue;
 
 
 @end

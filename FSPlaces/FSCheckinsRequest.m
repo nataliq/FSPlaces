@@ -20,34 +20,40 @@
 {
     self = [super initWithURL:[FSCheckinsRequest getURL]];
     if (self) {
-        
-        __block id<FSConnectionManagerDelegate> delegate = self.delegate;
-        self.handlerBlock = ^(NSURLResponse *response, NSData *data, NSError *error) {
-            if ([data length] > 0 && !error ) {
-                NSArray *array = [FSParser venueListFromParsedJSON:[FSParser parseJsonResponse:data error:error]];
-                
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    if (array.count>0) {
-                        FSVenue *venue = [array objectAtIndex:0];
-                        [delegate setLastCheckinLocation:venue.location];
-                    }
-                    
-                    [delegate setVenuesToShow:array];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"GetCheckedVenuesRequestResolved" object:nil];
-                });
-                
-            }
-            else if (error){
-                
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    [[UIAlertView noVenuesAlert] show];
-                });
-                
-                NSLog(@"Error: %@", error.debugDescription);
-            }
-        };
+        self.handlerBlock = [self complitionBlock];
     }
     return self;
+}
+
+- (ComplitionHandler)complitionBlock
+{
+    __block id<FSConnectionManagerDelegate> delegate = self.delegate;
+    
+    return ^(NSURLResponse *response, NSData *data, NSError *error) {
+        if ([data length] > 0 && !error ) {
+            NSArray *array = [FSParser venueListFromParsedJSON:[FSParser parseJsonResponse:data error:error]];
+            
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                if (array.count>0) {
+                    FSVenue *venue = [array objectAtIndex:0];
+                    [delegate setLastCheckinLocation:venue.location];
+                }
+                
+                [delegate setVenuesToShow:array];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"GetCheckedVenuesRequestResolved" object:nil];
+            });
+            
+        }
+        else if (error){
+            
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                [[UIAlertView noVenuesAlert] show];
+            });
+            
+            NSLog(@"Error: %@", error.debugDescription);
+        }
+    };
+
 }
 
 + (NSURL *)getURL

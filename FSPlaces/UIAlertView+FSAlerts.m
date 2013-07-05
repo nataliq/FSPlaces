@@ -20,4 +20,21 @@
     return [[UIAlertView alloc] initWithTitle:@"Can't Determinate Location" message:@"Turn on location services to find venues near by you." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 }
 
++ (UIAlertView *)checkedInAlertForVenue:(NSString *)venueName success:(BOOL)success
+{
+    NSString *message;
+    NSString *title;
+    
+    if (success) {
+        title = @"Success!";
+        message = [NSString stringWithFormat:@"You're checked at %@ now.", venueName];
+    }
+    else {
+        title = @"Sorry..";
+        message = [NSString stringWithFormat:@"Your attempt to check at %@ failed.", venueName];
+    }
+    
+    return  [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+}
+
 @end

@@ -13,9 +13,18 @@
 @class PlacesViewController;
 
 typedef enum {
+    
     ShowVenuesTypeAround = 0,
     ShowVenuesTypeChecked
-}ShowVenuesType;
+    
+} ShowVenuesType;
+
+typedef enum
+{
+    PlacesViewStyleMap = 0,
+    PlacesViewStyleTable
+    
+} PlacesViewStyle;
 
 @protocol FSMediator <NSObject, CLLocationManagerDelegate, FSConnectionManagerDelegate, UIWebViewDelegate>
 
@@ -24,6 +33,7 @@ typedef enum {
 - (void)updateUserInformation;
 - (void)updateLocation;
 - (void)profileActionSelected;
+- (void)setShownViewStyle:(PlacesViewStyle)shownViewStyle;
 - (ShowVenuesType)shownType;
 
 @end

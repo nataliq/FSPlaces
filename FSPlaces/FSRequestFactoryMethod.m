@@ -11,6 +11,7 @@
 #import "FSUserRequest.h"
 #import "FSVenuesRequest.h"
 #import "FSCheckinsRequest.h"
+#import "FSCheckInPostRequest.h"
 
 @implementation FSRequestFactoryMethod
 
@@ -26,6 +27,9 @@
             break;
         case FSRequestTypeCheckinList:
             return [[FSCheckinsRequest alloc] initWithParameters:params];
+            break;
+        case FSRequestTypeCheckIn:
+            return [[FSCheckInPostRequest alloc] initWithParameters:params];
             break;
     }
 }

@@ -25,8 +25,12 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewWillDisappear:animated];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,6 +55,10 @@
                     [[FSConnectionManager sharedManager] findCheckedInVenues];
                     break;
             }
+            
+            [self selectRowAtIndexPath:indexPath];
+            
+            [[FSMediator sharedMediator] performSelector:@selector(profileActionSelected) withObject:nil afterDelay:0.3];
 
         }
             break;
@@ -84,7 +92,6 @@
     }
     
     [self selectRowAtIndexPath:path];
-    [[FSMediator sharedMediator] profileActionSelected];
 }
 
 @end

@@ -158,6 +158,15 @@ static  FSConnectionManager* sharedManager = nil;
 
 }
 
+- (void)checkInInVenue:(FSVenue *)venue
+{
+    FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeCheckIn
+                                                      parameters:@{@"venueId" : venue.identifier,
+                                                                 @"venueName" : venue.name}];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
+}
+
 #pragma mark - Cancel connection
 
 - (void)cancelConnection
