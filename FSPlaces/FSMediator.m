@@ -55,10 +55,19 @@ static  FSMediator* sharedMediator = nil;
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if ([request.URL.scheme isEqualToString:@"itms-apps"])
+    if ([request.URL.scheme isEqualToString:@"fsplaces"])
     {
-        [[UIApplication sharedApplication] openURL:request.URL];
+        BOOL success = [[FSConnectionManager sharedManager] extractTokenFromResponseURL:request.URL];
+        if (success)
+        {
+            [webView removeFromSuperview];
+            webView = nil;
+            
+            [self updateUserInformation];
+            [self updateLocation];
+        }
         return NO;
+
     }
     return YES;
 }

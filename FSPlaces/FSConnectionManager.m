@@ -19,7 +19,7 @@
 #import "FSMediator.h"
 #import "UIAlertView+FSAlerts.h"
 
-#define CALLBACK_URL                @"http://foursquare.webscript.io/"
+#define CALLBACK_URL                @"fsplaces://redirect"
 #define TOKEN_KEY                   @"access_token"
 
 #define FS_AUTHENTICATE_FORMAT      @"https://foursquare.com/oauth2/authenticate?client_id=%@&response_type=token&redirect_uri=%@"

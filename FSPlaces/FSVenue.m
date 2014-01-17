@@ -22,7 +22,7 @@
         NSDictionary *locationInfo = [json objectForKey:@"location"];
         [self initLocation:locationInfo];
 
-        self.urlAddress = [json objectForKey:@"canonicalUrl"];
+        self.urlAddress = [json objectForKey:@"url"];
         
         NSArray *categories = [json objectForKey:@"categories"];
         [self initCategoryNames: categories];
