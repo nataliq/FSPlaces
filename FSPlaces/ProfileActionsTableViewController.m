@@ -17,8 +17,8 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectIndex:) name:@"GetVenuesRequestResolved" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectIndex:) name:@"GetCheckedVenuesRequestResolved" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectIndex:) name:FSNotificationVenuesRequestResolved object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectIndex:) name:FSNotificationCheckinsRequestResolved object:nil];
     
     // Uncomment the following line to preserve selection between presentations.
 }
@@ -84,7 +84,7 @@
 - (void)selectIndex:(NSNotification *)notification
 {
     NSIndexPath *path = nil;
-    if ([notification.name isEqualToString:@"GetVenuesRequestResolved"]) {
+    if ([notification.name isEqualToString:FSNotificationVenuesRequestResolved]) {
         path = [NSIndexPath indexPathForRow:0 inSection:0];
     }
     else {

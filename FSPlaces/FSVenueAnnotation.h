@@ -12,8 +12,8 @@
 @interface FSVenueAnnotation : NSObject <MKAnnotation>
 
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
-@property (nonatomic, readonly) NSString *title;
-@property (nonatomic, readonly) NSString *subtitle;
+@property (nonatomic, readonly, copy) NSString *title;
+@property (nonatomic, readonly, copy) NSString *subtitle;
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *url;

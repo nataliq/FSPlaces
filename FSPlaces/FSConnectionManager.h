@@ -18,6 +18,7 @@
 @property (weak, nonatomic) id<FSConnectionManagerDelegate> delegate;
 @property (strong, nonatomic, readonly) NSString *clientID;
 @property (strong, nonatomic, readonly) NSString *clientSecret;
+@property (assign, nonatomic, readonly) NSInteger startedRequestsWithCategoryId;
 
 + (FSConnectionManager *)sharedManager;
 
@@ -29,9 +30,12 @@
 - (void)cancelConnection;
 
 - (FSUser *)requestCurrentUserInformation;
-- (void)findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm;
+- (void)findVenuesNearby:(CLLocation *)location limit:(int) limit searchterm:(NSString*) searchterm categoryId:(NSString *)categoryId;
 - (void)findVenuesNearbyMeWithLimit:(int)limit;
 - (void)findCheckedInVenues;
+- (void)getAllCheckinHistory;
+- (void)getTODOs;
+- (void)findNearVenuesForCategoryId:(NSString *)categoryId;
 
 - (void)checkInInVenue:(FSVenue *)venue;
 

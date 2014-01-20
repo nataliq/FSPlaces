@@ -36,6 +36,37 @@
     return response;
 }
 
++ (NSArray *)venueListFromParsedSearchJSON:(NSDictionary *)json
+{
+    NSArray *venues = json[@"venues"];
+    if (venues.count > 0) {
+        
+        NSMutableArray *parsedVenues = [NSMutableArray array];
+        for (NSDictionary *venueInfo in venues) {
+            NSMutableDictionary *parsedJSON = [NSMutableDictionary dictionaryWithDictionary:venueInfo];
+            [parsedVenues addObject:[[FSVenue alloc] initFromParsedJSON:parsedJSON]];
+        }
+        return parsedVenues;
+    }
+    return nil;
+}
+
++ (NSArray *)venueListFromParsedTODOJSON:(NSDictionary *)json
+{
+    
+    NSArray *items = json[@"todos"][@"items"];
+    if (items.count > 0) {
+        
+        NSMutableArray *parsedVenues = [NSMutableArray array];
+        for (NSDictionary *itemInfo in items) {
+            NSMutableDictionary *parsedJSON = [NSMutableDictionary dictionaryWithDictionary:itemInfo[@"tip"][@"venue"]];
+            [parsedVenues addObject:[[FSVenue alloc] initFromParsedJSON:parsedJSON]];
+        }
+        return parsedVenues;
+    }
+    return nil;
+}
+
 + (NSArray *)venueListFromParsedJSON:(NSDictionary *)json
 {
     NSDictionary *info = nil;
@@ -66,6 +97,26 @@
     }
     
     return parsedVenues;
+}
+
++ (NSArray *)venueListFromParsedHistoryJSON:(NSDictionary *)json
+{
+    NSDictionary *venues = json[@"venues"];
+    if ([venues[@"count"] integerValue] > 0) {
+        
+        NSArray *items = venues[@"items"];
+        NSMutableArray *parsedVenues = [NSMutableArray array];
+        
+        for (NSDictionary *venueInfo in items) {
+            
+            NSMutableDictionary *parsedJSON = [NSMutableDictionary dictionaryWithDictionary:venueInfo[@"venue"]];
+            [parsedJSON setObject:venueInfo[@"beenHere"] forKey:@"been_here"];
+            
+            [parsedVenues addObject:[[FSVenue alloc] initFromParsedJSON:parsedJSON]];
+        }
+        return parsedVenues;
+    }
+    return nil;
 }
 
 @end

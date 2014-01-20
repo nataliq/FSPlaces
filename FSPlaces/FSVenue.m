@@ -7,6 +7,7 @@
 //
 
 #import "FSVenue.h"
+#import "FSCategory.h"
 
 @implementation FSVenue
 
@@ -18,6 +19,10 @@
 
         self.name = [json objectForKey:@"name"];
         self.identifier = [json objectForKey:@"id"];
+        self.beenHereCount = [[json objectForKey:@"been_here"] integerValue];
+        
+        NSDictionary *statisticsInfo = [json objectForKey:@"stats"];
+        [self initStatistics:statisticsInfo];
         
         NSDictionary *locationInfo = [json objectForKey:@"location"];
         [self initLocation:locationInfo];
@@ -32,35 +37,58 @@
 
 }
 
+- (void)initStatistics:(NSDictionary *)statisticsInfo
+{
+    self.checkinsCount = [statisticsInfo[@"checkinsCount"] integerValue];
+    self.tipCount = [statisticsInfo[@"tipCount"] integerValue];
+    self.usersCount = [statisticsInfo[@"usersCount"] integerValue];
+}
+
 - (void)initLocation:(NSDictionary *)locationInfo
 {
     self.location = [[CLLocation alloc] initWithLatitude:[[locationInfo objectForKey:@"lat"] floatValue] longitude:[[locationInfo objectForKey:@"lng"] floatValue]];
     self.distance = [[locationInfo objectForKey:@"distance"] floatValue];
 }
 
-- (void)initCategoryNames:(NSArray *)categories
+- (void)initCategoryNames:(NSArray *)categoriesData
 {
-    NSMutableArray *categoryNames = [NSMutableArray array];
+    NSMutableArray *categories = [[NSMutableArray alloc] initWithCapacity:categoriesData.count];
     
-    for (NSDictionary *category in categories) {
-        [categoryNames addObject:[category objectForKey:@"name"]];
+    for (NSDictionary *category in categoriesData) {
+        [categories addObject:[FSCategory initFromParsedJSON:category]];
     }
-    self.categoryNames = [NSArray arrayWithArray:categoryNames];
+    self.categories = [NSArray arrayWithArray:categories];
 
 }
 
-- (NSString *)categories
+- (NSString *)categoriesNames
 {
-    if (_categoryNames) {
+    if (_categories) {
         NSMutableString *subtitleString = [NSMutableString string];
-        for (NSString *name in _categoryNames) {
-            [subtitleString appendFormat:@"%@, ", name];
+        for (FSCategory *category in _categories) {
+            [subtitleString appendFormat:@"%@, ", category.name];
         }
         if (subtitleString.length>0) {
             return [subtitleString substringToIndex:subtitleString.length-2];
         }
     }
     return nil;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"Name: %@, Been Here: %d, Categories: %@, Users: %d, Proportion: %f",
+            self.name, self.beenHereCount, self.categoriesNames, self.usersCount, (float)self.usersCount / (float)self.checkinsCount];
+}
+
+- (BOOL)isEqual:(FSVenue *)otherVenue
+{
+    BOOL isEqual = [self.identifier isEqual:otherVenue.identifier];
+    BOOL equalNames = [self.name isEqualToString:otherVenue.name];
+    if (isEqual != equalNames) {
+        NSLog(@"Venue 1: %@, %@; Venue 2: %@, %@", self.identifier, self.name, otherVenue.identifier, otherVenue.name);
+    }
+    return isEqual;
 }
 
 @end

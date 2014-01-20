@@ -16,6 +16,8 @@
 #import "UIAlertView+FSAlerts.h"
 #import "FSMediator.h"
 
+#import "AppDelegate.h"
+
 #define MAP_REGION 300
 #define MAP_BIG_REGION 3000
 
@@ -44,7 +46,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(disableMainView:)
-                                                     name:@"FSNotificationShowProfile"
+                                                     name:FSNotificationShowProfile
                                                    object:nil];
 
     }
@@ -96,6 +98,7 @@
     NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
     [items insertObject:[[UIBarButtonItem alloc] initWithCustomView:self.showUserLocationButton] atIndex:0];
     [self.toolbar setItems:items];
+    [self.segmentedControl setTintColor:[UIColor colorWithRed:189.0f/255.0f green:70.0f/255.0f blue:220.0f/255.0f alpha:1.0]];
 
 }
 
@@ -137,7 +140,7 @@
     for (FSVenue *venue in self.venueDataSource.venues)
     {
         FSVenueAnnotation *annotation = [[FSVenueAnnotation alloc]
-                                             initWithCoordinate:venue.location.coordinate name:venue.name url:venue.urlAddress andCategoryNames:[venue categories]];
+                                             initWithCoordinate:venue.location.coordinate name:venue.name url:venue.urlAddress andCategoryNames:[venue categoriesNames]];
         [self.map addAnnotation:annotation];
             
     }
@@ -148,13 +151,13 @@
     if ([annotation isKindOfClass:[MKUserLocation class]])
         return nil;
     
-    NSString *indentifire = @"FSAnnotation";
+    static NSString *indentifier = @"FSAnnotation";
     
-    MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:indentifire];
+    MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:indentifier];
     
     if (annotationView == nil)
     {
-        annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:indentifire];
+        annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:indentifier];
     }
     
     [annotationView setEnabled:YES];
@@ -269,7 +272,7 @@
 #pragma mark - Notification handler
 - (void)disableMainView:(NSNotification *)notification
 {
-    BOOL disable = [[notification.userInfo objectForKey:@"showProfile"] boolValue];
+    BOOL disable = [[notification.userInfo objectForKey:FSNotificationShowProfileKey] boolValue];
     
     [self.profileView rotateArrowDown:!disable];
     

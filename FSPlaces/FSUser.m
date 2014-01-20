@@ -8,6 +8,8 @@
 
 #import "FSUser.h"
 
+#define UserPhotoSize @"100x100"
+
 @implementation FSUser
 
 - (FSUser *)initFromParsedJSON:(NSDictionary *)json
@@ -22,7 +24,14 @@
         self.fName = [userInfo objectForKey:@"firstName"];
         self.lName = [userInfo objectForKey:@"lastName"];
         self.city = [userInfo objectForKey:@"homeCity"];
-        self.photoURL = [userInfo objectForKey:@"photo"];
+        
+        NSDictionary *photoURLComponents = [userInfo objectForKey:@"photo"];
+        if (photoURLComponents.allKeys.count == 2) {
+            self.photoURL = [NSString stringWithFormat:@"%@%@%@", photoURLComponents[@"prefix"],
+                             UserPhotoSize,
+                             photoURLComponents[@"suffix"]];
+        }
+        
         
         NSDictionary *contactInfo = [userInfo objectForKey:@"contact"];
         self.contacts = [ContactInformation initFromParsedJSON:contactInfo];

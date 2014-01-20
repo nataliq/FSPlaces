@@ -12,8 +12,6 @@
 #import "FSConnectionManager.h"
 #import "UIAlertView+FSAlerts.h"
 
-#define FS_VENUES_FORMAT @"https://api.foursquare.com/v2/venues/search?client_secret=%@&client_id=%@"
-
 @interface FSRequest ()
 
 @property (strong, nonatomic, readwrite) NSDictionary *params;
@@ -24,47 +22,56 @@
 
 - (id)initWithParameters:(NSDictionary *)params
 {
-    self = [super initWithURL:[FSVenuesRequest getURL:params[@"location"] limit:[params[@"limit"] integerValue] searchterm:params[@"searchterm"]]];
+    self = [super initWithParameters:[FSVenuesRequest paramsFromParamDictionary:params]];
     if (self) {
-        
-        self.params = params;
-        
         __block id<FSConnectionManagerDelegate> delegate = self.delegate;
         self.handlerBlock = ^(NSURLResponse *response, NSData *data, NSError *error) {
+            NSArray * venueList = nil;
             if ([data length] > 0 && !error ) {
-                NSArray * result = [FSParser venueListFromParsedJSON:[FSParser parseJsonResponse:data error:error]];
-                
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    [delegate setLastCheckinLocation:nil];
-                    [delegate setVenuesToShow:result];
-                    
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"GetVenuesRequestResolved" object:nil];
-                });
-                
+                venueList = [FSParser venueListFromParsedSearchJSON:[FSParser parseJsonResponse:data error:error]];
+                if (!params[@"categoryId"]) {
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [delegate setLastCheckinLocation:nil];
+                        [delegate setVenuesToShow:venueList];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetVenuesRequestResolved" object:nil];
+                    }
+                                   );
+                }
             }
-            else if (error){
-                
+            else if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^(){
                     [[UIAlertView noVenuesAlert] show];
                 });
-                
                 NSLog(@"Error: %@", error.debugDescription);
             }
+            if (params[@"categoryId"]) [delegate addVenuesForRecommendation:venueList];
         };
     }
     return self;
 }
 
-+ (NSURL *)getURL:(CLLocation *)location limit:(int)limit searchterm:(NSString *)searchterm
++ (NSString *)URLPath
 {
-    // Build GET URL
-    NSMutableString *venuesURL = [[NSMutableString alloc] initWithFormat:FS_VENUES_FORMAT, [[FSConnectionManager sharedManager] clientSecret], [[FSConnectionManager sharedManager] clientID]];
-    [venuesURL appendFormat:@"&ll=%f,%f", location.coordinate.latitude, location.coordinate.longitude];
-    [venuesURL appendFormat:@"&limit=%d", limit];
+    return @"/venues/search";
+}
+
++ (BOOL)requestIsUserless
+{
+    return YES;
+}
+
++ (NSDictionary *)paramsFromParamDictionary:(NSDictionary *)paramDictionary
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:paramDictionary];
+    CLLocation *location = params[@"location"];
+    [params removeObjectForKey:@"location"];
+    [params setObject:[NSString stringWithFormat:@"%f,%f", location.coordinate.latitude, location.coordinate.longitude ] forKey:@"ll"];
     
-    if(searchterm != nil) [venuesURL appendFormat:@"&q=%@", searchterm];
-    
-    return [NSURL URLWithString:venuesURL];
+    if (params[@"searchterm"]) {
+        [params removeObjectForKey:@"searchterm"];
+        [params setObject:paramDictionary[@"searchterm"] forKey:@"q"];
+    }
+    return params;
 }
 
 @end

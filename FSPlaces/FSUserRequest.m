@@ -9,24 +9,11 @@
 #import "FSUserRequest.h"
 #import "FSConnectionManager.h"
 
-#define FS_CURRENT_USER_FORMAT      @"https://api.foursquare.com/v2/users/self?oauth_token=%@"
-
 @implementation FSUserRequest
 
-- (id)initWithParameters:(NSDictionary *)params
++ (NSString *)URLPath
 {
-    self = [super initWithURL:[FSUserRequest getURL]];
-    if (self) {
-    }
-    return self;
+    return @"";
 }
-
-+ (NSURL *)getURL
-{
-    NSString *userURL = [NSString stringWithFormat:FS_CURRENT_USER_FORMAT, [[FSConnectionManager sharedManager] accessToken]];
-    
-    return [NSURL URLWithString:userURL];
-}
-
 
 @end

@@ -23,5 +23,7 @@ typedef void (^ComplitionHandler)(NSURLResponse *response, NSData *data, NSError
 - (instancetype)initWithParameters:(NSDictionary *)params;
 
 + (NSURL *)getURL;
++ (NSString *)URLPath;
++ (BOOL)requestIsUserless;
 
 @end

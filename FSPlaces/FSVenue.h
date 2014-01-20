@@ -15,12 +15,14 @@
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) CLLocation *location;
 @property (nonatomic) float distance;
-@property (strong, nonatomic) NSArray *categoryNames;
+@property (strong, nonatomic) NSArray *categories;
 @property (strong, nonatomic) NSString *urlAddress;
+@property (assign, nonatomic) NSInteger beenHereCount;
+@property (assign, nonatomic) NSInteger checkinsCount;
+@property (assign, nonatomic) NSInteger tipCount;
+@property (assign, nonatomic) NSInteger usersCount;
 
--(NSString *)categories;
-
-
+- (NSString *)categoriesNames;
 - (FSVenue *)initFromParsedJSON:(NSDictionary *)json;
 
 @end

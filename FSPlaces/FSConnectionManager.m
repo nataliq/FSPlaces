@@ -31,12 +31,12 @@
 @property (strong, nonatomic, readwrite) NSString *clientID;
 @property (strong, nonatomic, readwrite) NSString *clientSecret;
 
-
 @end
 
 @implementation FSConnectionManager
 
-static  FSConnectionManager* sharedManager = nil;
+static FSConnectionManager* sharedManager = nil;
+static NSInteger startedRequestsForCategories = 0;
 
 #pragma mark - Singleton
 + (FSConnectionManager *)sharedManager
@@ -104,7 +104,7 @@ static  FSConnectionManager* sharedManager = nil;
 
 #pragma mark - Api methods
 
-- (void) findVenuesNearby:(CLLocation *)location limit:(int)limit searchterm:(NSString *)searchterm
+- (void)findVenuesNearby:(CLLocation *)location limit:(int)limit searchterm:(NSString *)searchterm categoryId:(NSString *)categoryId
 {
     if (location) {
         NSNumber *limitNumber = [NSNumber numberWithInt:limit];
@@ -112,6 +112,9 @@ static  FSConnectionManager* sharedManager = nil;
                                                                          forKeys:@[@"location", @"limit"]];
         if (searchterm) {
             [params setObject:searchterm forKey:@"searchterm"];
+        }
+        if (categoryId) {
+            [params setObject:categoryId forKey:@"categoryId"];
         }
         
         FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeVenue parameters:params];
@@ -122,14 +125,36 @@ static  FSConnectionManager* sharedManager = nil;
     else [[UIAlertView locationErrorAlert] show];
 }
 
-- (void) findVenuesNearbyMeWithLimit:(int)limit
+- (void)findVenuesNearbyMeWithLimit:(int)limit
 {
-   [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation] limit:limit searchterm:nil];
+   [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation] limit:limit searchterm:nil categoryId:nil];
 }
 
-- (void) findCheckedInVenues
+- (void)findNearVenuesForCategoryId:(NSString *)categoryId
+{
+    startedRequestsForCategories++;
+    [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation]
+                     limit:50 searchterm:nil categoryId:categoryId];
+}
+
+- (void)findCheckedInVenues
 {
     FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeCheckinList parameters:nil];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
+
+}
+
+- (void)getAllCheckinHistory
+{
+    FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeHistory parameters:nil];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
+}
+
+- (void)getTODOs
+{
+    FSRequest *request = [FSRequestFactoryMethod requestWithType:FSRequestTypeTODOs parameters:nil];
     
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
 

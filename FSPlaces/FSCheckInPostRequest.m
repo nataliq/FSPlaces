@@ -11,7 +11,7 @@
 #import "FSParser.h"
 #import "UIAlertView+FSAlerts.h"
 
-#define FS_CHECKIN_FORMAT @"https://api.foursquare.com/v2/checkins/add?oauth_token=%@"
+#define FS_CHECKIN_FORMAT @"https://api.foursquare.com/v2/checkins/add?oauth_token=%@&v=20140110"
 
 @interface FSCheckInPostRequest ()
 
@@ -60,9 +60,7 @@
             else if (error){
                 NSLog(@"Error: %@", error.debugDescription);
             }
-
     };
-    
 }
 
 + (NSURL *)postURL

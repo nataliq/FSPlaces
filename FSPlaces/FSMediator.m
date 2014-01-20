@@ -14,12 +14,15 @@
 
 #import "FSConnectionManager.h"
 #import "FSLocationManager.h"
+#import "FSRecommender.h"
 
-@interface FSMediator ()
+@interface FSMediator () <UIAlertViewDelegate>
 
 @property (strong, nonatomic) FSUser *currentUser;
 @property (assign, nonatomic) PlacesViewStyle shownViewStyle;
 @property (assign, nonatomic) ShowVenuesType shownVenueType;
+
+@property (strong, nonatomic) NSArray *venuesForRecommendation;
 
 @end
 
@@ -27,7 +30,9 @@
 
 #pragma mark - Singleton
 
-static  FSMediator* sharedMediator = nil;
+static FSMediator* sharedMediator = nil;
+static NSInteger sourcesCount = 0;
+static NSInteger runningCategoryRequestsCount = 0;
 
 + (FSMediator *)sharedMediator
 {
@@ -35,31 +40,19 @@ static  FSMediator* sharedMediator = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             sharedMediator = [[FSMediator alloc] init];
+            
         });
     }
     return sharedMediator;
-}
-
-- (id)init {
-    
-	self = [super init];
-	if (self)
-    {
-        
-    }
-    
-	return self;
 }
 
 #pragma mark - Web view delegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if ([request.URL.scheme isEqualToString:@"fsplaces"])
-    {
+    if ([request.URL.scheme isEqualToString:@"fsplaces"]) {
         BOOL success = [[FSConnectionManager sharedManager] extractTokenFromResponseURL:request.URL];
-        if (success)
-        {
+        if (success) {
             [webView removeFromSuperview];
             webView = nil;
             
@@ -67,23 +60,8 @@ static  FSMediator* sharedMediator = nil;
             [self updateLocation];
         }
         return NO;
-
     }
     return YES;
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-    
-    BOOL success = [[FSConnectionManager sharedManager] extractTokenFromResponseURL:[webView.request URL]];
-    if (success)
-    {
-        [webView removeFromSuperview];
-        webView = nil;
-        
-        [self updateUserInformation];
-        [self updateLocation];
-    }
 }
 
 #pragma mark - Location Manager Delegate
@@ -97,6 +75,7 @@ static  FSMediator* sharedMediator = nil;
 {
     dispatch_async(dispatch_get_main_queue(), ^(){
         [[UIAlertView locationErrorAlert] show];
+        NSLog(@"Location error: %@", error.debugDescription);
     });
 }
 
@@ -104,11 +83,11 @@ static  FSMediator* sharedMediator = nil;
 
 - (void)setVenuesToShow:(NSArray *)venues
 {
-    NSArray *sortedVenues = [venues sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
+    NSArray *venuesSortedByDistance = [venues sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
         return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
     }];
     
-    [self.placesController.venueDataSource setVenues:sortedVenues];
+    [self.placesController.venueDataSource setVenues:venuesSortedByDistance];
     //[self saveVenuesInPList];
     
     dispatch_async(dispatch_get_main_queue(), ^(){
@@ -119,9 +98,7 @@ static  FSMediator* sharedMediator = nil;
         else {
             [self.placesController.tableView reloadData];
         }
-
     });
-    
 }
 
 - (void)setLastCheckinLocation:(CLLocation *)location
@@ -130,26 +107,47 @@ static  FSMediator* sharedMediator = nil;
     self.shownVenueType = location ? ShowVenuesTypeAround : ShowVenuesTypeChecked;
 }
 
+- (void)addVenuesForTraining:(NSArray *)venues
+{
+    sourcesCount++;
+    if (venues) [[FSRecommender sharedRecomender] addVenuesToTrainingSet:venues];
+    
+    if (sourcesCount == 2) {
+        NSArray *categoryIds = [[FSRecommender sharedRecomender] filteredCategoryIdsForTestSet];
+        runningCategoryRequestsCount = categoryIds.count;
+        for (NSString *categoryId in categoryIds) {
+            [[FSConnectionManager sharedManager] findNearVenuesForCategoryId:categoryId];
+        }
+    }
+}
+
+- (void)addVenuesForRecommendation:(NSArray *)venues
+{
+    runningCategoryRequestsCount--;
+    if (venues) [[FSRecommender sharedRecomender] addVenuesToTestSet:venues];
+    
+    if (runningCategoryRequestsCount == 0) {
+        self.venuesForRecommendation = [[FSRecommender sharedRecomender] filteredItemsToRecommend];
+        [[[UIAlertView alloc] initWithTitle:@"Hey, we found some interesting places!" message:@"We think that you may be interested in checking out some cool places around you" delegate:self cancelButtonTitle:@"View places" otherButtonTitles: nil] show];
+    }
+}
+
 - (void)setShownViewStyle:(PlacesViewStyle)shownViewStyle
 {
     _shownViewStyle = shownViewStyle;
 }
 
-#pragma mark - update places view controller ui
+#pragma mark - Update PlacesViewController UI
 - (void)updateUserInformation
 {
-    if (![[FSConnectionManager sharedManager] isActive])
-    {
+    if (![[FSConnectionManager sharedManager] isActive]) {
         [self.placesController showLogInForm];
     }
-    
-    else
-    {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(){
+    else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^() {
             [self loadUserInfo];
         });
     }
-
 }
 
 - (void)loadUserInfo
@@ -162,13 +160,9 @@ static  FSMediator* sharedMediator = nil;
             dispatch_async(dispatch_get_main_queue(), ^(){
                 [self.placesController.profileView populateWithUserInformation:self.currentUser];
                 [self.placesController.profileView setHidden:NO animated:YES];
-                
             });
-            
         }
-        
     }
-
 }
 
 - (void)updateLocation
@@ -186,9 +180,13 @@ static  FSMediator* sharedMediator = nil;
         else if([[FSConnectionManager sharedManager] isActive]){
             [self.placesController.venueDataSource requestCheckedVenues];
             self.shownVenueType = ShowVenuesTypeChecked;
-            
+        }
+        if (self.placesController.currentLocation) {
+            [[FSConnectionManager sharedManager] getAllCheckinHistory];
+            [[FSConnectionManager sharedManager] getTODOs];
         }
     });
+    
 }
 
 - (void)profileActionSelected
@@ -199,6 +197,14 @@ static  FSMediator* sharedMediator = nil;
 - (ShowVenuesType)shownType
 {
     return self.shownVenueType;
+}
+
+#pragma mark - Alert view delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [self setVenuesToShow:self.venuesForRecommendation];
+    }
 }
 
 #pragma mark - Helpers

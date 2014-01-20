@@ -16,4 +16,7 @@
 - (void)setVenuesToShow:(NSArray *)venues;
 - (void)setLastCheckinLocation:(CLLocation *)location;
 
+- (void)addVenuesForTraining:(NSArray *)venues;
+- (void)addVenuesForRecommendation:(NSArray *)venues;
+
 @end

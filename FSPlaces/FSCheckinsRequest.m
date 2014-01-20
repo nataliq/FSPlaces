@@ -12,13 +12,11 @@
 #import "FSVenue.h"
 #import "UIAlertView+FSAlerts.h"
 
-#define FS_CURRENT_USER_CHECKINS    @"https://api.foursquare.com/v2/users/self/checkins?oauth_token=%@"
-
 @implementation FSCheckinsRequest
 
-- (id)init
+- (id)initWithParameters:(NSDictionary *)params
 {
-    self = [super initWithURL:[FSCheckinsRequest getURL]];
+    self = [super initWithParameters:params];
     if (self) {
         self.handlerBlock = [self complitionBlock];
     }
@@ -40,12 +38,11 @@
                 }
                 
                 [delegate setVenuesToShow:array];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"GetCheckedVenuesRequestResolved" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:FSNotificationCheckinsRequestResolved object:nil];
             });
             
         }
         else if (error){
-            
             dispatch_async(dispatch_get_main_queue(), ^(){
                 [[UIAlertView noVenuesAlert] show];
             });
@@ -56,13 +53,9 @@
 
 }
 
-+ (NSURL *)getURL
++ (NSString *)URLPath
 {
-    // Build GET URL
-	NSMutableString *venuesURL = [[NSMutableString alloc] initWithFormat:FS_CURRENT_USER_CHECKINS, [[FSConnectionManager sharedManager] accessToken]];
-    
-    return [NSURL URLWithString:venuesURL];
-    
+    return @"/checkins";
 }
 
 @end

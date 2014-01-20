@@ -25,7 +25,6 @@
         _title = _name;
         
         _subtitle = names;
-        
     }
     return self;
 }

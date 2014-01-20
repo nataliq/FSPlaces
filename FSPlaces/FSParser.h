@@ -16,6 +16,8 @@
 + (id)parseJsonResponse:(NSData *)data error:(NSError *)error;
 
 + (NSArray *)venueListFromParsedJSON:(NSDictionary *)json;
-
++ (NSArray *)venueListFromParsedSearchJSON:(NSDictionary *)json;
++ (NSArray *)venueListFromParsedHistoryJSON:(NSDictionary *)json;
++ (NSArray *)venueListFromParsedTODOJSON:(NSDictionary *)json;
 
 @end

@@ -12,6 +12,8 @@
 #import "FSVenuesRequest.h"
 #import "FSCheckinsRequest.h"
 #import "FSCheckInPostRequest.h"
+#import "FSHistoryRequest.h"
+#import "FSTODORequest.h"
 
 @implementation FSRequestFactoryMethod
 
@@ -31,6 +33,11 @@
         case FSRequestTypeCheckIn:
             return [[FSCheckInPostRequest alloc] initWithParameters:params];
             break;
+        case FSRequestTypeHistory:
+            return [[FSHistoryRequest alloc] initWithParameters:params];
+            break;
+        case FSRequestTypeTODOs:
+            return [[FSTODORequest alloc] initWithParameters:nil];
     }
 }
 

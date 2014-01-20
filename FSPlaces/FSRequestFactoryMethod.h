@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "FSRequest.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, FSRequestType) {
     FSRequestTypeUser,
     FSRequestTypeVenue,
     FSRequestTypeCheckinList,
-    FSRequestTypeCheckIn
-} FSRequestType;
+    FSRequestTypeCheckIn,
+    FSRequestTypeHistory,
+    FSRequestTypeTODOs
+};
 
 @interface FSRequestFactoryMethod : NSObject
 

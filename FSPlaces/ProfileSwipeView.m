@@ -28,7 +28,7 @@
 	// When a touch starts, get the current location in the view
     
 	self.currentPoint = [[touches anyObject] locationInView:self];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"FSNotificationShowProfile" object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"show"]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FSNotificationShowProfile object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:FSNotificationShowProfileKey]];
     
 }
 
@@ -83,7 +83,7 @@
         self.center = newPoint;
     }completion:nil ];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"FSNotificationShowProfile" object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:down] forKey:@"showProfile"]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FSNotificationShowProfile object:nil userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:down] forKey:FSNotificationShowProfileKey]];
     
     self.isShown = down;
 
