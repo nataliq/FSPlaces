@@ -26,7 +26,7 @@ typedef enum
     
 } PlacesViewStyle;
 
-@protocol FSMediator <NSObject, CLLocationManagerDelegate, FSConnectionManagerDelegate, UIWebViewDelegate>
+@protocol FSMediator <NSObject, CLLocationManagerDelegate, FSConnectionManagerDelegate>
 
 @property (nonatomic, assign) PlacesViewController *placesController;
 

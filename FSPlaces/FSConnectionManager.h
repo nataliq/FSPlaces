@@ -18,10 +18,12 @@
 @property (weak, nonatomic) id<FSConnectionManagerDelegate> delegate;
 @property (strong, nonatomic, readonly) NSString *clientID;
 @property (strong, nonatomic, readonly) NSString *clientSecret;
+@property (strong, nonatomic, readonly) NSString *callbackURI;
 @property (assign, nonatomic, readonly) NSInteger startedRequestsWithCategoryId;
 
 + (FSConnectionManager *)sharedManager;
 
+- (void)handleFSOAuthURL:(NSURL *)url;
 - (NSString *)accessToken;
 - (BOOL)isActive;
 

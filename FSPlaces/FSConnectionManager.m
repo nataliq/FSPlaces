@@ -18,10 +18,9 @@
 #import "FSRequestFactoryMethod.h"
 #import "FSMediator.h"
 #import "UIAlertView+FSAlerts.h"
+#import <FSOAuth/FSOAuth.h>
 
-#define CALLBACK_URL                @"fsplaces://redirect"
 #define TOKEN_KEY                   @"access_token"
-
 #define FS_AUTHENTICATE_FORMAT      @"https://foursquare.com/oauth2/authenticate?client_id=%@&response_type=token&redirect_uri=%@"
 
 @interface FSConnectionManager () 
@@ -30,6 +29,7 @@
 
 @property (strong, nonatomic, readwrite) NSString *clientID;
 @property (strong, nonatomic, readwrite) NSString *clientSecret;
+@property (strong, nonatomic, readwrite) NSString *callbackURI;
 
 @end
 
@@ -59,6 +59,7 @@ static NSInteger startedRequestsForCategories = 0;
         NSDictionary *dictPlist = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
         self.clientID = [dictPlist objectForKey:@"clientID"];
         self.clientSecret = [dictPlist objectForKey:@"clientSecret"];
+        self.callbackURI = [dictPlist objectForKey:@"callbackURI"];
         
         self.delegate = [FSMediator sharedMediator];
     }
@@ -67,6 +68,21 @@ static NSInteger startedRequestsForCategories = 0;
 }
 
 #pragma mark - Application token
+
+- (void)handleFSOAuthURL:(NSURL *)url
+{
+    FSOAuthErrorCode *errorCode = nil;
+    NSString *accessCode = [FSOAuth accessCodeForFSOAuthURL:url error:errorCode];
+    [FSOAuth requestAccessTokenForCode:accessCode
+                              clientId:self.clientID
+                     callbackURIString:self.callbackURI
+                          clientSecret:self.clientSecret
+                       completionBlock:^(NSString *authToken, BOOL requestCompleted, FSOAuthErrorCode errorCode) {
+                           if (requestCompleted && errorCode == FSOAuthErrorNone) {
+                               [self saveTokenKey:authToken];
+                           }
+                       }];
+}
 
 - (BOOL)isActive
 {
@@ -83,7 +99,7 @@ static NSInteger startedRequestsForCategories = 0;
 
 - (NSURLRequest *)tokenRequest
 {
-    NSString *authenticateURLString = [NSString stringWithFormat:FS_AUTHENTICATE_FORMAT, self.clientID, CALLBACK_URL];
+    NSString *authenticateURLString = [NSString stringWithFormat:FS_AUTHENTICATE_FORMAT, self.clientID, self.callbackURI];
     return [NSURLRequest requestWithURL:[NSURL URLWithString:authenticateURLString]];
 }
 
@@ -92,14 +108,18 @@ static NSInteger startedRequestsForCategories = 0;
     NSString *URLString = [url absoluteString];
     
     if ([URLString rangeOfString:TOKEN_KEY].location != NSNotFound) {
-        NSString *accessToken = [[URLString componentsSeparatedByString:@"="] lastObject];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:accessToken forKey:TOKEN_KEY];
-        [defaults synchronize];
-        
+        NSString *authToken = [[URLString componentsSeparatedByString:@"="] lastObject];
+        [self saveTokenKey:authToken];
         return YES;
     }
     else return NO;
+}
+
+- (void)saveTokenKey:(NSString *)toknKey
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:toknKey forKey:TOKEN_KEY];
+    [defaults synchronize];
 }
 
 #pragma mark - Api methods

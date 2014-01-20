@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "FSConnectionManager.h"
 
 @implementation AppDelegate
 
@@ -19,6 +20,13 @@
 
     return YES;
     
+}
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([[url scheme] isEqualToString:@"fsplaces"]) {
+        [[FSConnectionManager sharedManager] handleFSOAuthURL:url];
+    }
+    return YES;
 }
 
 @end

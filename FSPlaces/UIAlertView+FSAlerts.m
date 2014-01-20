@@ -10,6 +10,15 @@
 
 @implementation UIAlertView (FSAlerts)
 
++ (UIAlertView *)alertWithMessage:(NSString *)message
+{
+    return [[UIAlertView alloc] initWithTitle:@"" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+}
++ (UIAlertView *)loginFailureAlert
+{
+    return [self alertWithMessage:@"Can't login to Foursquare."];
+}
+
 + (UIAlertView *)noVenuesAlert
 {
     return [[UIAlertView alloc] initWithTitle:@"Can't Find Venues" message:@"Check your internet connection and reload the map." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];

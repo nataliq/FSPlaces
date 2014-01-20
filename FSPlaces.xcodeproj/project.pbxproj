@@ -10,7 +10,9 @@
 		1495EFC817753839002EDF1D /* ContactInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFC717753839002EDF1D /* ContactInformation.m */; };
 		1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFCA17753F38002EDF1D /* ProfileView.m */; };
 		3F94CFEC51744DD5AB1E4E10 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35E7102A9C2049F2A096F4C1 /* libPods.a */; };
-		4D2EC97D177DF67D00126FDD /* venues.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D2EC97C177DF67D00126FDD /* venues.plist */; };
+		4D649B19188D7C9400D796CE /* screenshot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D649B18188D7C9400D796CE /* screenshot@2x.png */; };
+		4D649B1B188D7CB900D796CE /* screenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D649B1A188D7CB900D796CE /* screenshot.png */; };
+		4D649B1E188D808B00D796CE /* FSLoginControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D649B1D188D808B00D796CE /* FSLoginControllerViewController.m */; };
 		4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D7C3E4717744E6800D191F8 /* VenueDataSource.m */; };
 		4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8CE2991772E2DB008D0738 /* UIAlertView+FSAlerts.m */; };
 		4D8CE29C1772E574008D0738 /* clientInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D8CE29B1772E574008D0738 /* clientInfo.plist */; };
@@ -67,7 +69,10 @@
 		1495EFC917753F38002EDF1D /* ProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileView.h; sourceTree = "<group>"; };
 		1495EFCA17753F38002EDF1D /* ProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileView.m; sourceTree = "<group>"; };
 		35E7102A9C2049F2A096F4C1 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D2EC97C177DF67D00126FDD /* venues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = venues.plist; sourceTree = "<group>"; };
+		4D649B18188D7C9400D796CE /* screenshot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "screenshot@2x.png"; sourceTree = "<group>"; };
+		4D649B1A188D7CB900D796CE /* screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = screenshot.png; sourceTree = "<group>"; };
+		4D649B1C188D808B00D796CE /* FSLoginControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSLoginControllerViewController.h; sourceTree = "<group>"; };
+		4D649B1D188D808B00D796CE /* FSLoginControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSLoginControllerViewController.m; sourceTree = "<group>"; };
 		4D7C3E4617744E6800D191F8 /* VenueDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VenueDataSource.h; sourceTree = "<group>"; };
 		4D7C3E4717744E6800D191F8 /* VenueDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VenueDataSource.m; sourceTree = "<group>"; };
 		4D8CE2981772E2DB008D0738 /* UIAlertView+FSAlerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+FSAlerts.h"; sourceTree = "<group>"; };
@@ -207,6 +212,8 @@
 				4DC8B2D01785D08D00F6536E /* icon-back@2x.png */,
 				F3471AEA16D9B48F00DA5A67 /* up.png */,
 				F3471AEB16D9B48F00DA5A67 /* up@2x.png */,
+				4D649B18188D7C9400D796CE /* screenshot@2x.png */,
+				4D649B1A188D7CB900D796CE /* screenshot.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -220,6 +227,8 @@
 				7D61193716DE6E7D005AFBEE /* ProfileActionsTableViewController.m */,
 				7DBDB1A316DE9B160092D061 /* FSVenueDetalsViewController.h */,
 				7DBDB1A416DE9B160092D061 /* FSVenueDetalsViewController.m */,
+				4D649B1C188D808B00D796CE /* FSLoginControllerViewController.h */,
+				4D649B1D188D808B00D796CE /* FSLoginControllerViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -348,9 +357,9 @@
 		F38C2E1516D8E0A500969D14 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4DC8B2CE1785D06400F6536E /* Resources */,
 				4D8EC6D8177586570029C8FF /* Default.png */,
 				4D8EC6D61775843F0029C8FF /* foursquare-icon.png */,
-				4DC8B2CE1785D06400F6536E /* Resources */,
 				F38C2E1616D8E0A500969D14 /* FSPlaces-Info.plist */,
 				F38C2E1716D8E0A500969D14 /* InfoPlist.strings */,
 				F38C2E1A16D8E0A500969D14 /* main.m */,
@@ -359,7 +368,6 @@
 				F38C2E2216D8E0A500969D14 /* Default@2x.png */,
 				F38C2E2416D8E0A500969D14 /* Default-568h@2x.png */,
 				4D8CE29B1772E574008D0738 /* clientInfo.plist */,
-				4D2EC97C177DF67D00126FDD /* venues.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -419,16 +427,17 @@
 			files = (
 				F38C2E1916D8E0A500969D14 /* InfoPlist.strings in Resources */,
 				F38C2E2116D8E0A500969D14 /* Default.png in Resources */,
+				4D649B19188D7C9400D796CE /* screenshot@2x.png in Resources */,
 				F38C2E2316D8E0A500969D14 /* Default@2x.png in Resources */,
 				F38C2E2516D8E0A500969D14 /* Default-568h@2x.png in Resources */,
 				F38C2E2816D8E0A500969D14 /* MainStoryboard.storyboard in Resources */,
 				F3471AEC16D9B48F00DA5A67 /* up.png in Resources */,
 				F3471AED16D9B48F00DA5A67 /* up@2x.png in Resources */,
 				7D61193516DE6AB1005AFBEE /* 1099932_orig.png in Resources */,
+				4D649B1B188D7CB900D796CE /* screenshot.png in Resources */,
 				4D8CE29C1772E574008D0738 /* clientInfo.plist in Resources */,
 				4D8EC6D71775843F0029C8FF /* foursquare-icon.png in Resources */,
 				4D8EC6D9177586570029C8FF /* Default.png in Resources */,
-				4D2EC97D177DF67D00126FDD /* venues.plist in Resources */,
 				B3201C47188C7CC100AA540D /* locationIcon@2x.png in Resources */,
 				4DC8B2D11785D08D00F6536E /* icon-back.png in Resources */,
 				4DC8B2D21785D08D00F6536E /* icon-back@2x.png in Resources */,
@@ -491,6 +500,7 @@
 				7D61193816DE6E7E005AFBEE /* ProfileActionsTableViewController.m in Sources */,
 				7DBDB1A216DE954E0092D061 /* UIView+Disable.m in Sources */,
 				7DBDB1A516DE9B170092D061 /* FSVenueDetalsViewController.m in Sources */,
+				4D649B1E188D808B00D796CE /* FSLoginControllerViewController.m in Sources */,
 				B3201C3F188C135C00AA540D /* FSTODORequest.m in Sources */,
 				4D92187517719CFC002C1DB9 /* FSRequestFactoryMethod.m in Sources */,
 				4D9218791771A09D002C1DB9 /* FSUserRequest.m in Sources */,

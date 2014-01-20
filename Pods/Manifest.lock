@@ -1,10 +1,13 @@
 PODS:
+  - FSOAuth (1.0)
   - PKRevealController (2.0.6)
 
 DEPENDENCIES:
+  - FSOAuth (~> 1.0)
   - PKRevealController (~> 2.0.6)
 
 SPEC CHECKSUMS:
+  FSOAuth: 8c590a8e7c716151b5d0f02b78e7b531ed64ff40
   PKRevealController: 883287432cecf4cda037184eb822548b9713f8c2
 
 COCOAPODS: 0.28.0

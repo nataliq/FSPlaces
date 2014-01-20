@@ -17,13 +17,13 @@
 #import "FSMediator.h"
 
 #import "AppDelegate.h"
+#import <FSOAuth.h>
 
 #define MAP_REGION 300
 #define MAP_BIG_REGION 3000
 
 @interface PlacesViewController () <MKMapViewDelegate, UITableViewDelegate>
 
-@property (strong, nonatomic, readwrite) UIWebView *webView;
 @property (strong, nonatomic) UIButton *showUserLocationButton;
 
 - (IBAction)showUserLocation;
@@ -48,7 +48,6 @@
                                                  selector:@selector(disableMainView:)
                                                      name:FSNotificationShowProfile
                                                    object:nil];
-
     }
     
     return self;
@@ -59,21 +58,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self customizeToolbar];
     
     self.tableView.dataSource = self.venueDataSource;
-    
-    [self customizeToolbar];
     
     [self.mediator updateUserInformation];
     [self.mediator updateLocation];
 }
 
-- (void)viewDidUnload
+- (void)dealloc
 {
-    [super viewDidUnload];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.webView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -106,15 +101,6 @@
 
 - (void)showLogInForm
 {
-    self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.webView.delegate = self.mediator;
-    self.webView.opaque = NO;
-    self.webView.backgroundColor = [UIColor clearColor];
-    [self.webView loadRequest:[[FSConnectionManager sharedManager] tokenRequest]];
-    
-    [self.view addSubview:self.webView];
-
 }
 
 #pragma mark - Map View

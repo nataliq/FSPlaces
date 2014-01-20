@@ -10,6 +10,8 @@
 
 @interface UIAlertView (FSAlerts)
 
++ (UIAlertView *)alertWithMessage:(NSString *)message;
++ (UIAlertView *)loginFailureAlert;
 + (UIAlertView *)noVenuesAlert;
 + (UIAlertView *)locationErrorAlert;
 + (UIAlertView *)checkedInAlertForVenue:(NSString *)venueName success:(BOOL)success;

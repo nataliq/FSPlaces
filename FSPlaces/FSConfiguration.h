@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 //  Notification names
+extern NSString* const FSNotificationLocationServicesAreEnabled;
 extern NSString* const FSNotificationShowProfile;
 extern NSString* const FSNotificationVenuesRequestResolved;
 extern NSString* const FSNotificationCheckinsRequestResolved;

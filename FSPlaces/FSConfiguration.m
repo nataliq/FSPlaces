@@ -8,6 +8,7 @@
 
 #import "FSConfiguration.h"
 
+NSString* const FSNotificationLocationServicesAreEnabled = @"FSNotificationLocationEnabled";
 NSString* const FSNotificationShowProfile = @"FSNotificationShowProfile";
 NSString* const FSNotificationVenuesRequestResolved = @"GetVenuesRequestResolved";
 NSString* const FSNotificationCheckinsRequestResolved = @"GetCheckedVenuesRequestResolved";

@@ -46,28 +46,13 @@ static NSInteger runningCategoryRequestsCount = 0;
     return sharedMediator;
 }
 
-#pragma mark - Web view delegate
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    if ([request.URL.scheme isEqualToString:@"fsplaces"]) {
-        BOOL success = [[FSConnectionManager sharedManager] extractTokenFromResponseURL:request.URL];
-        if (success) {
-            [webView removeFromSuperview];
-            webView = nil;
-            
-            [self updateUserInformation];
-            [self updateLocation];
-        }
-        return NO;
-    }
-    return YES;
-}
-
 #pragma mark - Location Manager Delegate
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
+    if (status == kCLAuthorizationStatusAuthorized) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FSNotificationLocationServicesAreEnabled object:nil];
+    }
     self.placesController.currentLocation = [[FSLocationManager sharedManager] getCurrentLocation];
 }
 
@@ -86,19 +71,7 @@ static NSInteger runningCategoryRequestsCount = 0;
     NSArray *venuesSortedByDistance = [venues sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
         return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
     }];
-    
-    [self.placesController.venueDataSource setVenues:venuesSortedByDistance];
-    //[self saveVenuesInPList];
-    
-    dispatch_async(dispatch_get_main_queue(), ^(){
-        if (self.shownViewStyle == PlacesViewStyleMap) {
-            [self.placesController updateMapViewRegion];
-            [self.placesController plotVenuesOnMap];
-        }
-        else {
-            [self.placesController.tableView reloadData];
-        }
-    });
+    [self updateVenues:venuesSortedByDistance];
 }
 
 - (void)setLastCheckinLocation:(CLLocation *)location
@@ -128,7 +101,15 @@ static NSInteger runningCategoryRequestsCount = 0;
     
     if (runningCategoryRequestsCount == 0) {
         self.venuesForRecommendation = [[FSRecommender sharedRecomender] filteredItemsToRecommend];
-        [[[UIAlertView alloc] initWithTitle:@"Hey, we found some interesting places!" message:@"We think that you may be interested in checking out some cool places around you" delegate:self cancelButtonTitle:@"View places" otherButtonTitles: nil] show];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[[UIAlertView alloc] initWithTitle:@"Hey, we found some interesting places!"
+                                        message:@"We think that you may be interested in checking out some cool places around you"
+                                       delegate:self
+                              cancelButtonTitle:@"View places"
+                              otherButtonTitles: nil]
+             show];
+
+        });
     }
 }
 
@@ -140,29 +121,19 @@ static NSInteger runningCategoryRequestsCount = 0;
 #pragma mark - Update PlacesViewController UI
 - (void)updateUserInformation
 {
-    if (![[FSConnectionManager sharedManager] isActive]) {
-        [self.placesController showLogInForm];
-    }
-    else {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^() {
-            [self loadUserInfo];
-        });
-    }
-}
-
-- (void)loadUserInfo
-{
-    if (!self.currentUser) {
-        
-        self.currentUser = [[FSConnectionManager sharedManager] requestCurrentUserInformation];
-        
-        if (self.currentUser) {
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                [self.placesController.profileView populateWithUserInformation:self.currentUser];
-                [self.placesController.profileView setHidden:NO animated:YES];
-            });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^() {
+        if (!self.currentUser) {
+            
+            self.currentUser = [[FSConnectionManager sharedManager] requestCurrentUserInformation];
+            
+            if (self.currentUser) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    [self.placesController.profileView populateWithUserInformation:self.currentUser];
+                    [self.placesController.profileView setHidden:NO animated:YES];
+                });
+            }
         }
-    }
+    });
 }
 
 - (void)updateLocation
@@ -173,7 +144,7 @@ static NSInteger runningCategoryRequestsCount = 0;
         [self.placesController updateMapViewRegion];
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(){
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(){
         if (self.placesController.currentLocation && self.shownViewStyle == ShowVenuesTypeAround) {
             [self.placesController.venueDataSource requestVenues];
         }
@@ -186,7 +157,22 @@ static NSInteger runningCategoryRequestsCount = 0;
             [[FSConnectionManager sharedManager] getTODOs];
         }
     });
+}
+
+- (void)updateVenues:(NSArray *)venues
+{
+    [self.placesController.venueDataSource setVenues:venues];
     
+    dispatch_async(dispatch_get_main_queue(), ^(){
+        if (self.shownViewStyle == PlacesViewStyleMap) {
+            [self.placesController updateMapViewRegion];
+            [self.placesController plotVenuesOnMap];
+        }
+        else {
+            [self.placesController.tableView reloadData];
+        }
+    });
+
 }
 
 - (void)profileActionSelected
@@ -205,24 +191,6 @@ static NSInteger runningCategoryRequestsCount = 0;
     if (buttonIndex == 0) {
         [self setVenuesToShow:self.venuesForRecommendation];
     }
-}
-
-#pragma mark - Helpers
-
-- (void)saveVenuesInPList
-{
-    NSString *destPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    destPath = [destPath stringByAppendingPathComponent:@"venues.plist"];
-    
-    // If the file doesn't exist in the Documents Folder, copy it.
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    if (![fileManager fileExistsAtPath:destPath]) {
-        NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"venues" ofType:@"plist"];
-        [fileManager copyItemAtPath:sourcePath toPath:destPath error:nil];
-    }
-    
-    // Load the Property List.
 }
 
 @end

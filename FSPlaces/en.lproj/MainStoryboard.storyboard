@@ -1,14 +1,103 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ZNx-aw-zhR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ZNx-aw-zhR">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
+        <!--Login Controller View Controller-->
+        <scene sceneID="PVx-8X-pbg">
+            <objects>
+                <viewController id="n1C-mo-rJ6" customClass="FSLoginControllerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Nst-Xj-Dvc"/>
+                        <viewControllerLayoutGuide type="bottom" id="LZu-NA-LPt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HgZ-hx-Gqe">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yup-Jb-cWV">
+                                <rect key="frame" x="63" y="521" width="194" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HiraMinProN-W3" family="Hiragino Mincho ProN" pointSize="15"/>
+                                <state key="normal" title="Login with Foursquare App">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="loginInFacebookAppButtonTapped:" destination="n1C-mo-rJ6" eventType="touchUpInside" id="kO1-ex-cdz"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="screenshot.png" translatesAutoresizingMaskIntoConstraints="NO" id="vf1-L1-aDw">
+                                <rect key="frame" x="58" y="88" width="204" height="168"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="168" id="EHM-Sx-gsa"/>
+                                    <constraint firstAttribute="width" constant="204" id="EHg-I1-uvH"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aji-2O-Aj1">
+                                <rect key="frame" x="49" y="486" width="222" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HiraMinProN-W3" family="Hiragino Mincho ProN" pointSize="15"/>
+                                <state key="normal" title="Login with email and password">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="loginInWebViewButtonTapped:" destination="n1C-mo-rJ6" eventType="touchUpInside" id="UBO-Zg-esn"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="hLK-n2-fIN">
+                                <rect key="frame" x="20" y="264" width="280" height="112"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="112" id="hS0-jg-hG2"/>
+                                </constraints>
+                                <string key="text">In order to find best places for you, we need you to login with your Foursquare account. Otherwise you will see only 20 of the nearest venues to you. 
+
+Please enable Location services on your phone.</string>
+                                <fontDescription key="fontDescription" name="HiraMinProN-W3" family="Hiragino Mincho ProN" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Intelligent Recommender" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k6M-YB-Udu">
+                                <rect key="frame" x="35" y="36" width="251" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="27" id="zni-ly-QLK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HiraMinProN-W3" family="Hiragino Mincho ProN" pointSize="21"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="k6M-YB-Udu" secondAttribute="centerX" id="7k0-FC-Kaj"/>
+                            <constraint firstAttribute="trailing" secondItem="vf1-L1-aDw" secondAttribute="trailing" constant="58" id="9t9-PV-ORu"/>
+                            <constraint firstItem="hLK-n2-fIN" firstAttribute="leading" secondItem="HgZ-hx-Gqe" secondAttribute="leading" constant="20" id="AMs-kF-NwD"/>
+                            <constraint firstItem="vf1-L1-aDw" firstAttribute="leading" secondItem="HgZ-hx-Gqe" secondAttribute="leading" constant="58" id="CIE-99-DCV"/>
+                            <constraint firstItem="vf1-L1-aDw" firstAttribute="top" secondItem="k6M-YB-Udu" secondAttribute="bottom" constant="25" id="QPq-eG-6xd"/>
+                            <constraint firstAttribute="centerX" secondItem="Aji-2O-Aj1" secondAttribute="centerX" id="Zwx-S6-v86"/>
+                            <constraint firstItem="LZu-NA-LPt" firstAttribute="top" secondItem="yup-Jb-cWV" secondAttribute="bottom" constant="20" id="c9C-bs-4ox"/>
+                            <constraint firstItem="hLK-n2-fIN" firstAttribute="top" secondItem="vf1-L1-aDw" secondAttribute="bottom" constant="8" id="cJU-mr-KOW"/>
+                            <constraint firstAttribute="trailing" secondItem="hLK-n2-fIN" secondAttribute="trailing" constant="20" id="dlS-Fk-qOg"/>
+                            <constraint firstItem="yup-Jb-cWV" firstAttribute="top" secondItem="Aji-2O-Aj1" secondAttribute="bottom" constant="8" id="i8A-nA-Fx0"/>
+                            <constraint firstItem="k6M-YB-Udu" firstAttribute="top" secondItem="Nst-Xj-Dvc" secondAttribute="bottom" constant="16" id="jEe-sg-BbA"/>
+                            <constraint firstAttribute="centerX" secondItem="yup-Jb-cWV" secondAttribute="centerX" id="zOm-PJ-iQc"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Tbi-ot-dSA"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kbv-mz-9RG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-82" y="-255"/>
+        </scene>
         <!--Places View Controller-->
         <scene sceneID="32f-Su-GYr">
             <objects>
-                <viewController id="fA3-Qb-U5z" customClass="PlacesViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlacesController" id="fA3-Qb-U5z" customClass="PlacesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sgU-N0-ZHs"/>
                         <viewControllerLayoutGuide type="bottom" id="P3H-4M-8Z8"/>
@@ -346,16 +435,17 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="fA3-Qb-U5z" kind="relationship" relationship="rootViewController" id="fhL-2e-xeX"/>
+                        <segue destination="n1C-mo-rJ6" kind="relationship" relationship="rootViewController" id="W56-xy-Tzg"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hY3-mI-k9p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-168" y="-213"/>
+            <point key="canvasLocation" x="-542" y="-255"/>
         </scene>
     </scenes>
     <resources>
         <image name="1099932_orig.png" width="90" height="90"/>
+        <image name="screenshot.png" width="204" height="168"/>
         <image name="up.png" width="21" height="25"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
