@@ -9,6 +9,7 @@
 #import "FSRecommender.h"
 #import "FSConnectionManager.h"
 #import "FSVenue.h"
+#import "FSVenue+AttributesVector.h"
 
 @interface FSRecommender ()
 
@@ -58,7 +59,13 @@ static FSRecommender* sharedRecomender = nil;
 
 - (NSArray *)filteredCategoryIdsForTestSet
 {
-    NSArray *categoriesArrays = [self.venuesTrainingSet.allObjects valueForKeyPath:@"@unionOfObjects.categories"];
+    NSArray *venuesSortedByBeenHereCount = [self.venuesTrainingSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *venue1, FSVenue *venue2) {
+        return (NSComparisonResult) [@(venue1.beenHereCount) compare:@(venue2.beenHereCount)];
+    }];
+    NSArray *topMostVisitedCategories = [[[venuesSortedByBeenHereCount reverseObjectEnumerator] allObjects]
+                                         subarrayWithRange:NSMakeRange(0, MIN(70, floor(0.3 * venuesSortedByBeenHereCount.count)))];
+    
+    NSArray *categoriesArrays = [topMostVisitedCategories valueForKeyPath:@"@unionOfObjects.categories"];
     NSArray *categoriesFlatten = [categoriesArrays valueForKeyPath:@"@unionOfArrays.self"];
     NSMutableArray *categoryIds = [NSMutableArray arrayWithArray:[categoriesFlatten valueForKeyPath:@"@unionOfObjects.identifier"]];
     
@@ -69,20 +76,24 @@ static FSRecommender* sharedRecomender = nil;
     
     
     return [filteredCategories subarrayWithRange:NSMakeRange(0, MIN(20, floor(0.3 * filteredCategories.count)))];
-    
 }
 
 - (NSArray *)filteredItemsToRecommend
 {
+    NSMutableArray *venuesToRecommend = [NSMutableArray array];
+    
+    
+    // recommend venues from todo list for sure
     NSMutableSet *intersectionBetweenSets = [[NSMutableSet alloc] initWithSet:self.venuesTrainingSet];
     [intersectionBetweenSets intersectSet:self.venuesTestSet];
-    
-    NSMutableArray *venuesToRecommend = [NSMutableArray array];
     for (FSVenue *venue in intersectionBetweenSets) {
         if (venue.beenHereCount == 0) {
             [venuesToRecommend addObject:venue];
+            [self.venuesTestSet removeObject:venue];
         }
     }
+    
+    [self evaluateItemsFromTestSet];
     
     NSArray *nearestVenues = [self.venuesTestSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
         return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
@@ -92,6 +103,83 @@ static FSRecommender* sharedRecomender = nil;
     return venuesToRecommend;
 }
 
+- (void)evaluateItemsFromTestSet
+{
+    for (FSVenue *trainingVenue in self.venuesTrainingSet) {
+        [self getMostSimilarItemsForItem:trainingVenue count:10];
+    }
+}
+
+- (NSArray *)getMostSimilarItemsForItem:(FSVenue *)item count:(NSInteger)count
+{
+    NSMutableDictionary *similarityDictionary = [NSMutableDictionary dictionaryWithCapacity:self.venuesTestSet.count];
+    NSMutableArray *mostSimilarItems = [NSMutableArray arrayWithCapacity:count];
+    
+    for (FSVenue *testVenue in self.venuesTestSet) {
+        CGFloat similarity = [self checkSimilarityFromItem:item toItem:testVenue];
+        NSMutableArray *itemsWithEqualSimilarity = similarityDictionary[@(similarity)];
+        if (!itemsWithEqualSimilarity) {
+            itemsWithEqualSimilarity = [NSMutableArray array];
+        }
+        [itemsWithEqualSimilarity addObject:testVenue];
+        [similarityDictionary setObject:itemsWithEqualSimilarity forKey:@(similarity)];
+    }
+    
+    NSArray *sortedSimilarities = [similarityDictionary.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    
+    for (NSNumber *similarity in sortedSimilarities)
+    {
+        [mostSimilarItems addObjectsFromArray:[similarityDictionary objectForKey:similarity]];
+        if (mostSimilarItems.count >= count || [similarity floatValue] == 0) break;
+    }
+    
+    return mostSimilarItems;
+}
+
+- (CGFloat)checkSimilarityFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
+{
+    return [self checkEuclideanDistanceFromItem:fromItem toItem:toItem];
+}
+
+- (CGFloat)checkCosineSimilarityFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
+{
+    CGFloat theta, nominator = 0, denominator = 0, denominatorFromPart = 0, denominatorToPart = 0;
+    
+    for (NSInteger i = 0; i < fromItem.attributesVector.count; i++) {
+        for (NSInteger j = 0; j < toItem.attributesVector.count; j++) {
+            CGFloat fromAttribute = [fromItem.attributesVector[i] floatValue];
+            CGFloat toAttribute = [toItem.attributesVector[j] floatValue];
+            
+            nominator += fromAttribute * toAttribute;
+            denominatorFromPart += fromAttribute * fromAttribute;
+            denominatorToPart += toAttribute * toAttribute;
+        }
+    }
+    
+    denominator = (sqrtf(denominatorFromPart) * sqrtf(denominatorToPart)) ?: 1;
+    theta = nominator / denominator;
+    NSLog(@"theta: %f", theta);
+    return theta;
+}
+
+- (CGFloat)checkEuclideanDistanceFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
+{
+    CGFloat distance = 0;
+    
+    for (NSInteger i = 0; i < fromItem.attributesVector.count; i++) {
+        for (NSInteger j = 0; j < toItem.attributesVector.count; j++) {
+            CGFloat fromAttribute = [fromItem.attributesVector[i] floatValue];
+            CGFloat toAttribute = [toItem.attributesVector[j] floatValue];
+            
+            distance += (fromAttribute - toAttribute) * (fromAttribute - toAttribute);
+        }
+    }
+    CGFloat euclideanDistance = sqrtf(distance);
+    NSLog(@"EuclideanDistance: %f", euclideanDistance);
+    return euclideanDistance;
+}
+
+#pragma mark - Helper functions
 NSInteger countedSort(id obj1, id obj2, void *context) {
     NSCountedSet *countedSet = (__bridge NSCountedSet *)(context);
     NSUInteger obj1Count = [countedSet countForObject:obj1];

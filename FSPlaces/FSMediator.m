@@ -69,7 +69,7 @@ static NSInteger runningCategoryRequestsCount = 0;
 - (void)setVenuesToShow:(NSArray *)venues
 {
     NSArray *venuesSortedByDistance = [venues sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
-        return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
+        return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];
     }];
     [self updateVenues:venuesSortedByDistance];
 }

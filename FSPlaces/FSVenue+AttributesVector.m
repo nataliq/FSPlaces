@@ -10,4 +10,9 @@
 
 @implementation FSVenue (AttributesVector)
 
+- (NSArray *)attributesVector
+{
+    NSArray *attributes = @[@(self.beenHereCount), @(self.usersCount), @(self.checkinsCount)];
+    return attributes;
+}
 @end

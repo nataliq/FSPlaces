@@ -75,10 +75,15 @@
     return nil;
 }
 
+- (CGFloat)proportionBetweenCheckinsAndUsersCount
+{
+    return (float)self.usersCount / (float)self.checkinsCount;
+}
+
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"Name: %@, Been Here: %d, Categories: %@, Users: %d, Proportion: %f",
-            self.name, self.beenHereCount, self.categoriesNames, self.usersCount, (float)self.usersCount / (float)self.checkinsCount];
+    return [NSString stringWithFormat:@"Name: %@, Categories: %@, Been here: %d, Users: %d, Checkins: %d, Proportion: %f",
+            self.name, self.categoriesNames, self.beenHereCount, self.usersCount, self.checkinsCount, self.proportionBetweenCheckinsAndUsersCount];
 }
 
 - (BOOL)isEqual:(FSVenue *)otherVenue

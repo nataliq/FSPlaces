@@ -10,4 +10,6 @@
 
 @interface FSVenue (AttributesVector)
 
+- (NSArray *)attributesVector;
+
 @end

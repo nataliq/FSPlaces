@@ -22,7 +22,9 @@
 @property (assign, nonatomic) NSInteger tipCount;
 @property (assign, nonatomic) NSInteger usersCount;
 
+- (CGFloat)proportionBetweenCheckinsAndUsersCount;
 - (NSString *)categoriesNames;
 - (FSVenue *)initFromParsedJSON:(NSDictionary *)json;
+
 
 @end
