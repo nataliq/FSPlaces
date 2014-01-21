@@ -12,7 +12,7 @@
 
 - (NSArray *)attributesVector
 {
-    NSArray *attributes = @[@(self.beenHereCount), @(self.usersCount), @(self.checkinsCount)];
+    NSArray *attributes = @[@(self.usersCount), @(self.proportionBetweenCheckinsAndUsersCount)];
     return attributes;
 }
 @end

@@ -16,6 +16,9 @@
 @property (strong, nonatomic) NSMutableSet *venuesTrainingSet;
 @property (strong, nonatomic) NSMutableSet *venuesTestSet;
 
+@property (assign, nonatomic) NSInteger maxUserCount;
+@property (assign, nonatomic) NSInteger minUserCount;
+
 @end
 
 @implementation FSRecommender;
@@ -105,6 +108,11 @@ static FSRecommender* sharedRecomender = nil;
 
 - (void)evaluateItemsFromTestSet
 {
+    NSMutableSet *allVenues = [[NSMutableSet alloc] initWithSet:self.venuesTrainingSet];
+    [allVenues unionSet:self.venuesTestSet];
+    self.maxUserCount = [[allVenues.allObjects valueForKeyPath:@"@max.usersCount"] integerValue];
+    self.minUserCount = [[allVenues.allObjects valueForKeyPath:@"@min.usersCount"] integerValue];
+    
     for (FSVenue *trainingVenue in self.venuesTrainingSet) {
         [self getMostSimilarItemsForItem:trainingVenue count:10];
     }
@@ -127,7 +135,7 @@ static FSRecommender* sharedRecomender = nil;
     
     NSArray *sortedSimilarities = [similarityDictionary.allKeys sortedArrayUsingSelector:@selector(compare:)];
     
-    for (NSNumber *similarity in sortedSimilarities)
+    for (NSNumber *similarity in [sortedSimilarities reverseObjectEnumerator])
     {
         [mostSimilarItems addObjectsFromArray:[similarityDictionary objectForKey:similarity]];
         if (mostSimilarItems.count >= count || [similarity floatValue] == 0) break;
@@ -138,24 +146,25 @@ static FSRecommender* sharedRecomender = nil;
 
 - (CGFloat)checkSimilarityFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
 {
-    return [self checkEuclideanDistanceFromItem:fromItem toItem:toItem];
+    return [self checkCosineSimilarityFromItem:fromItem toItem:toItem];
 }
 
 - (CGFloat)checkCosineSimilarityFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
 {
     CGFloat theta, nominator = 0, denominator = 0, denominatorFromPart = 0, denominatorToPart = 0;
     
-    for (NSInteger i = 0; i < fromItem.attributesVector.count; i++) {
-        for (NSInteger j = 0; j < toItem.attributesVector.count; j++) {
-            CGFloat fromAttribute = [fromItem.attributesVector[i] floatValue];
-            CGFloat toAttribute = [toItem.attributesVector[j] floatValue];
-            
-            nominator += fromAttribute * toAttribute;
-            denominatorFromPart += fromAttribute * fromAttribute;
-            denominatorToPart += toAttribute * toAttribute;
-        }
-    }
+    CGFloat normalizedFromUserCount = ([fromItem.attributesVector[0] floatValue] - self.minUserCount) / (self.maxUserCount - self.minUserCount);
+    CGFloat normalizedToUserCount = ([toItem.attributesVector[0] floatValue] - self.minUserCount) / (self.maxUserCount - self.minUserCount);
     
+    nominator += normalizedFromUserCount * normalizedToUserCount;
+    nominator += [fromItem.attributesVector[1] floatValue] * [toItem.attributesVector[1] floatValue];
+    
+    denominatorFromPart += normalizedFromUserCount * normalizedFromUserCount;
+    denominatorToPart += normalizedToUserCount * normalizedToUserCount;
+    
+    denominatorFromPart += [fromItem.attributesVector[1] floatValue] * [fromItem.attributesVector[1] floatValue];
+    denominatorToPart += [toItem.attributesVector[1] floatValue] * [toItem.attributesVector[1] floatValue];
+
     denominator = (sqrtf(denominatorFromPart) * sqrtf(denominatorToPart)) ?: 1;
     theta = nominator / denominator;
     NSLog(@"theta: %f", theta);
