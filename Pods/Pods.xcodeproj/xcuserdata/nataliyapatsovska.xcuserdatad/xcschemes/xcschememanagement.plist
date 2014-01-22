@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-FSOAuth.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 		<key>Pods-PKRevealController.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -17,7 +22,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>2518C08D46EC4524A50A992A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6CAA05C1C4674F5CA4AE3D79</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>6E9E6C42DEAD4E7DB8122D7D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>74B64CADA49F498794B9D8D1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

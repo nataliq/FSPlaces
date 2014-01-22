@@ -128,8 +128,8 @@ static NSInteger startedRequestsForCategories = 0;
 {
     if (location) {
         NSNumber *limitNumber = [NSNumber numberWithInt:limit];
-        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[location, limitNumber]
-                                                                         forKeys:@[@"location", @"limit"]];
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[location, limitNumber, @1000]
+                                                                         forKeys:@[@"location", @"limit", @"radius"]];
         if (searchterm) {
             [params setObject:searchterm forKey:@"searchterm"];
         }
@@ -154,7 +154,7 @@ static NSInteger startedRequestsForCategories = 0;
 {
     startedRequestsForCategories++;
     [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation]
-                     limit:50 searchterm:nil categoryId:categoryId];
+                     limit:20 searchterm:nil categoryId:categoryId];
 }
 
 - (void)findCheckedInVenues

@@ -96,26 +96,48 @@ static FSRecommender* sharedRecomender = nil;
         }
     }
     
-    [self evaluateItemsFromTestSet];
+    [venuesToRecommend addObjectsFromArray:[self evaluateItemsFromTestSet]];
     
-    NSArray *nearestVenues = [self.venuesTestSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
-        return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
-    }];
-    [venuesToRecommend addObjectsFromArray:[nearestVenues subarrayWithRange:NSMakeRange(0, MIN(50, floor(0.2 * nearestVenues.count)))]];
+//    NSArray *nearestVenues = [self.venuesTestSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
+//        return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
+//    }];
+//    [venuesToRecommend addObjectsFromArray:[nearestVenues subarrayWithRange:NSMakeRange(0, MIN(50, floor(0.2 * nearestVenues.count)))]];
     
     return venuesToRecommend;
 }
 
-- (void)evaluateItemsFromTestSet
+- (NSArray *)evaluateItemsFromTestSet
 {
     NSMutableSet *allVenues = [[NSMutableSet alloc] initWithSet:self.venuesTrainingSet];
     [allVenues unionSet:self.venuesTestSet];
     self.maxUserCount = [[allVenues.allObjects valueForKeyPath:@"@max.usersCount"] integerValue];
     self.minUserCount = [[allVenues.allObjects valueForKeyPath:@"@min.usersCount"] integerValue];
     
+    NSCountedSet *mostSimilarItems = [NSCountedSet set];
     for (FSVenue *trainingVenue in self.venuesTrainingSet) {
-        [self getMostSimilarItemsForItem:trainingVenue count:10];
+        [mostSimilarItems addObjectsFromArray:[self getMostSimilarItemsForItem:trainingVenue count:10]];
     }
+    
+    NSMutableDictionary *similarityCountDictionary = [NSMutableDictionary dictionaryWithCapacity:mostSimilarItems.count];
+    for (NSObject *object in mostSimilarItems) {
+        NSInteger count = [mostSimilarItems countForObject:object];
+        NSMutableArray *itemsWithEqualSimilarityCount = similarityCountDictionary[@(count)];
+        if (!itemsWithEqualSimilarityCount) {
+            itemsWithEqualSimilarityCount = [NSMutableArray array];
+        }
+        [itemsWithEqualSimilarityCount addObject:object];
+        [similarityCountDictionary setObject:itemsWithEqualSimilarityCount forKey:@(count)];
+    }
+    
+    NSArray *sortedCounts = [similarityCountDictionary.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableArray *venuesToRecommend = [NSMutableArray array];
+    
+    for (NSNumber *count in [sortedCounts reverseObjectEnumerator])
+    {
+        [venuesToRecommend addObjectsFromArray:[similarityCountDictionary objectForKey:count]];
+        if (venuesToRecommend.count >= 50 || [count floatValue] == 0) break;
+    }
+    return venuesToRecommend;
 }
 
 - (NSArray *)getMostSimilarItemsForItem:(FSVenue *)item count:(NSInteger)count
@@ -135,7 +157,7 @@ static FSRecommender* sharedRecomender = nil;
     
     NSArray *sortedSimilarities = [similarityDictionary.allKeys sortedArrayUsingSelector:@selector(compare:)];
     
-    for (NSNumber *similarity in [sortedSimilarities reverseObjectEnumerator])
+    for (NSNumber *similarity in sortedSimilarities)
     {
         [mostSimilarItems addObjectsFromArray:[similarityDictionary objectForKey:similarity]];
         if (mostSimilarItems.count >= count || [similarity floatValue] == 0) break;
@@ -146,7 +168,7 @@ static FSRecommender* sharedRecomender = nil;
 
 - (CGFloat)checkSimilarityFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
 {
-    return [self checkCosineSimilarityFromItem:fromItem toItem:toItem];
+    return [self checkEuclideanDistanceFromItem:fromItem toItem:toItem];
 }
 
 - (CGFloat)checkCosineSimilarityFromItem:(FSVenue *)fromItem toItem:(FSVenue *)toItem
@@ -175,14 +197,12 @@ static FSRecommender* sharedRecomender = nil;
 {
     CGFloat distance = 0;
     
-    for (NSInteger i = 0; i < fromItem.attributesVector.count; i++) {
-        for (NSInteger j = 0; j < toItem.attributesVector.count; j++) {
-            CGFloat fromAttribute = [fromItem.attributesVector[i] floatValue];
-            CGFloat toAttribute = [toItem.attributesVector[j] floatValue];
-            
-            distance += (fromAttribute - toAttribute) * (fromAttribute - toAttribute);
-        }
-    }
+    CGFloat normalizedFromUserCount = ([fromItem.attributesVector[0] floatValue] - self.minUserCount) / (self.maxUserCount - self.minUserCount);
+    CGFloat normalizedToUserCount = ([toItem.attributesVector[0] floatValue] - self.minUserCount) / (self.maxUserCount - self.minUserCount);
+    distance += (normalizedFromUserCount - normalizedToUserCount) * (normalizedFromUserCount - normalizedToUserCount);
+    distance += ([toItem.attributesVector[1] floatValue] - [toItem.attributesVector[1] floatValue]) *
+    ([toItem.attributesVector[1] floatValue] - [toItem.attributesVector[1] floatValue]);
+    
     CGFloat euclideanDistance = sqrtf(distance);
     NSLog(@"EuclideanDistance: %f", euclideanDistance);
     return euclideanDistance;
