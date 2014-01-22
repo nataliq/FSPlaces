@@ -15,6 +15,8 @@
 - (void)addVenuesToTrainingSet:(NSArray *)venues;
 - (void)addVenuesToTestSet:(NSArray *)venues;
 
+- (NSInteger)testVenuesCounToFetch;
+
 - (NSArray *)filteredCategoryIdsForTestSet;
 - (NSArray *)filteredItemsToRecommend;
 

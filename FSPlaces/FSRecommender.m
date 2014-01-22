@@ -21,6 +21,9 @@
 
 @end
 
+NSInteger const MaxCategoriesCount = 20;
+CGFloat const TrainingTestRatio = 0.4;
+
 @implementation FSRecommender;
 
 static FSRecommender* sharedRecomender = nil;
@@ -60,25 +63,34 @@ static FSRecommender* sharedRecomender = nil;
     [self.venuesTestSet addObjectsFromArray:venues];
 }
 
+- (NSInteger)testVenuesCounToFetch
+{
+    return (self.venuesTrainingSet.count * (1 - TrainingTestRatio) ) / TrainingTestRatio;
+}
+
 - (NSArray *)filteredCategoryIdsForTestSet
 {
-    NSArray *venuesSortedByBeenHereCount = [self.venuesTrainingSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *venue1, FSVenue *venue2) {
-        return (NSComparisonResult) [@(venue1.beenHereCount) compare:@(venue2.beenHereCount)];
-    }];
-    NSArray *topMostVisitedCategories = [[[venuesSortedByBeenHereCount reverseObjectEnumerator] allObjects]
-                                         subarrayWithRange:NSMakeRange(0, MIN(70, floor(0.3 * venuesSortedByBeenHereCount.count)))];
+    NSMutableDictionary *beenHereByCategory = [NSMutableDictionary dictionary];
+    for (FSVenue *venue in self.venuesTrainingSet) {
+        NSString *key = [venue.categories.firstObject identifier];
+        NSNumber *countForCategory = beenHereByCategory[key];
+        NSInteger count = [countForCategory integerValue] + venue.beenHereCount;
+        [beenHereByCategory setObject:@(count) forKey:key];
     
-    NSArray *categoriesArrays = [topMostVisitedCategories valueForKeyPath:@"@unionOfObjects.categories"];
-    NSArray *categoriesFlatten = [categoriesArrays valueForKeyPath:@"@unionOfArrays.self"];
-    NSMutableArray *categoryIds = [NSMutableArray arrayWithArray:[categoriesFlatten valueForKeyPath:@"@unionOfObjects.identifier"]];
+    }
     
-    NSCountedSet *countedSet = [[NSCountedSet alloc] initWithArray:categoryIds];
+    NSArray *sortedCounts = [beenHereByCategory.allValues sortedArrayUsingSelector:@selector(compare:)];
     
-    [categoryIds sortUsingFunction:countedSort context:(__bridge void *)(countedSet)];
-    NSArray *filteredCategories = [[NSArray arrayWithArray:categoryIds] valueForKeyPath:@"@distinctUnionOfObjects.self"];
+    CGFloat mean = [[beenHereByCategory.allValues valueForKeyPath:@"@sum.integerValue"] floatValue] /
+    (float)beenHereByCategory.allValues.count;
     
+    NSMutableArray *filterdCategories = [NSMutableArray array];
+    for (NSNumber *count in [sortedCounts reverseObjectEnumerator]) {
+        [filterdCategories addObjectsFromArray:[beenHereByCategory allKeysForObject:count]];
+        if ([count integerValue] < mean || filterdCategories.count >= MaxCategoriesCount) break;
+    }
     
-    return [filteredCategories subarrayWithRange:NSMakeRange(0, MIN(20, floor(0.3 * filteredCategories.count)))];
+    return filterdCategories;
 }
 
 - (NSArray *)filteredItemsToRecommend
@@ -92,7 +104,6 @@ static FSRecommender* sharedRecomender = nil;
     for (FSVenue *venue in intersectionBetweenSets) {
         if (venue.beenHereCount == 0) {
             [venuesToRecommend addObject:venue];
-            [self.venuesTestSet removeObject:venue];
         }
     }
     

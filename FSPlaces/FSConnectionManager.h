@@ -37,7 +37,7 @@
 - (void)findCheckedInVenues;
 - (void)getAllCheckinHistory;
 - (void)getTODOs;
-- (void)findNearVenuesForCategoryId:(NSString *)categoryId;
+- (void)findNearVenuesForCategoryId:(NSString *)categoryId limit:(NSInteger)limit;
 
 - (void)checkInInVenue:(FSVenue *)venue;
 

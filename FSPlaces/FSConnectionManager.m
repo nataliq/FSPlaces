@@ -150,11 +150,11 @@ static NSInteger startedRequestsForCategories = 0;
    [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation] limit:limit searchterm:nil categoryId:nil];
 }
 
-- (void)findNearVenuesForCategoryId:(NSString *)categoryId
+- (void)findNearVenuesForCategoryId:(NSString *)categoryId limit:(NSInteger)limit
 {
     startedRequestsForCategories++;
     [self findVenuesNearby:[[FSLocationManager sharedManager] getCurrentLocation]
-                     limit:20 searchterm:nil categoryId:categoryId];
+                     limit:limit searchterm:nil categoryId:categoryId];
 }
 
 - (void)findCheckedInVenues
