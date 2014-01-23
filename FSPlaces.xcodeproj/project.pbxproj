@@ -39,6 +39,9 @@
 		B3201C42188C2FF000AA540D /* FSRecommender.m in Sources */ = {isa = PBXBuildFile; fileRef = B3201C41188C2FF000AA540D /* FSRecommender.m */; };
 		B3201C45188C4D9300AA540D /* FSCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B3201C44188C4D9300AA540D /* FSCategory.m */; };
 		B3201C47188C7CC100AA540D /* locationIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3201C46188C7CC100AA540D /* locationIcon@2x.png */; };
+		B3930AA618912573008C388E /* FSCategoriesController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3930AA518912573008C388E /* FSCategoriesController.m */; };
+		B3930AA9189125A9008C388E /* CategoriesDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B3930AA8189125A9008C388E /* CategoriesDataSource.m */; };
+		B3930AAC189140FB008C388E /* FSVenueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B3930AAB189140FB008C388E /* FSVenueCell.m */; };
 		F317046016D908B100397BF1 /* PlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F317045F16D908B100397BF1 /* PlacesViewController.m */; };
 		F3471ABE16D965CB00DA5A67 /* FSConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F3471ABD16D965CB00DA5A67 /* FSConnectionManager.m */; };
 		F3471AC016D96B5100DA5A67 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3471ABF16D96B5100DA5A67 /* MapKit.framework */; };
@@ -121,6 +124,12 @@
 		B3201C43188C4D9300AA540D /* FSCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCategory.h; sourceTree = "<group>"; };
 		B3201C44188C4D9300AA540D /* FSCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCategory.m; sourceTree = "<group>"; };
 		B3201C46188C7CC100AA540D /* locationIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "locationIcon@2x.png"; sourceTree = "<group>"; };
+		B3930AA418912573008C388E /* FSCategoriesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCategoriesController.h; sourceTree = "<group>"; };
+		B3930AA518912573008C388E /* FSCategoriesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCategoriesController.m; sourceTree = "<group>"; };
+		B3930AA7189125A9008C388E /* CategoriesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoriesDataSource.h; sourceTree = "<group>"; };
+		B3930AA8189125A9008C388E /* CategoriesDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoriesDataSource.m; sourceTree = "<group>"; };
+		B3930AAA189140FB008C388E /* FSVenueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSVenueCell.h; sourceTree = "<group>"; };
+		B3930AAB189140FB008C388E /* FSVenueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSVenueCell.m; sourceTree = "<group>"; };
 		F317045E16D908B100397BF1 /* PlacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesViewController.h; sourceTree = "<group>"; };
 		F317045F16D908B100397BF1 /* PlacesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesViewController.m; sourceTree = "<group>"; };
 		F3471ABC16D965CB00DA5A67 /* FSConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSConnectionManager.h; sourceTree = "<group>"; };
@@ -181,6 +190,8 @@
 			children = (
 				4D7C3E4617744E6800D191F8 /* VenueDataSource.h */,
 				4D7C3E4717744E6800D191F8 /* VenueDataSource.m */,
+				B3930AA7189125A9008C388E /* CategoriesDataSource.h */,
+				B3930AA8189125A9008C388E /* CategoriesDataSource.m */,
 			);
 			name = "Data Sources";
 			sourceTree = "<group>";
@@ -232,6 +243,8 @@
 				7DBDB1A416DE9B160092D061 /* FSVenueDetalsViewController.m */,
 				4D649B1C188D808B00D796CE /* FSLoginControllerViewController.h */,
 				4D649B1D188D808B00D796CE /* FSLoginControllerViewController.m */,
+				B3930AA418912573008C388E /* FSCategoriesController.h */,
+				B3930AA518912573008C388E /* FSCategoriesController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -258,6 +271,8 @@
 				1495EFCA17753F38002EDF1D /* ProfileView.m */,
 				F3471AD116D99D5400DA5A67 /* ProfileSwipeView.h */,
 				F3471AD216D99D5400DA5A67 /* ProfileSwipeView.m */,
+				B3930AAA189140FB008C388E /* FSVenueCell.h */,
+				B3930AAB189140FB008C388E /* FSVenueCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -491,10 +506,12 @@
 			files = (
 				F38C2E1B16D8E0A500969D14 /* main.m in Sources */,
 				B3201C3C188BFB8F00AA540D /* FSConfiguration.m in Sources */,
+				B3930AA9189125A9008C388E /* CategoriesDataSource.m in Sources */,
 				F38C2E1F16D8E0A500969D14 /* AppDelegate.m in Sources */,
 				F317046016D908B100397BF1 /* PlacesViewController.m in Sources */,
 				F3471ABE16D965CB00DA5A67 /* FSConnectionManager.m in Sources */,
 				B3201C42188C2FF000AA540D /* FSRecommender.m in Sources */,
+				B3930AAC189140FB008C388E /* FSVenueCell.m in Sources */,
 				F3471AC516D983F600DA5A67 /* FSParser.m in Sources */,
 				F3471AC816D9868B00DA5A67 /* FSVenue.m in Sources */,
 				F3471ACB16D98E6600DA5A67 /* FSVenueAnnotation.m in Sources */,
@@ -504,6 +521,7 @@
 				F3500B2A16DA483100267DD4 /* FSLocationManager.m in Sources */,
 				7D61193816DE6E7E005AFBEE /* ProfileActionsTableViewController.m in Sources */,
 				7DBDB1A216DE954E0092D061 /* UIView+Disable.m in Sources */,
+				B3930AA618912573008C388E /* FSCategoriesController.m in Sources */,
 				7DBDB1A516DE9B170092D061 /* FSVenueDetalsViewController.m in Sources */,
 				4D649B1E188D808B00D796CE /* FSLoginControllerViewController.m in Sources */,
 				B3201C3F188C135C00AA540D /* FSTODORequest.m in Sources */,

@@ -17,6 +17,7 @@
 @property (strong, nonatomic) CLLocation *location;
 @property (nonatomic) float distance;
 @property (strong, nonatomic) NSArray *categories;
+@property (strong, nonatomic) NSString *address;
 @property (strong, nonatomic) NSString *urlAddress;
 @property (assign, nonatomic) NSInteger beenHereCount;
 @property (assign, nonatomic) NSInteger checkinsCount;
@@ -25,6 +26,7 @@
 
 - (CGFloat)proportionBetweenCheckinsAndUsersCount;
 - (NSString *)categoriesNames;
+- (FSCategory *)primaryCategory;
 - (FSVenue *)initFromParsedJSON:(NSDictionary *)json;
 
 

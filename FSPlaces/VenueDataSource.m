@@ -8,6 +8,7 @@
 
 #import "VenueDataSource.h"
 #import "FSVenue.h"
+#import "FSVenueCell.h"
 
 #define VENUES_LIMIT 20
 
@@ -31,16 +32,11 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    FSVenueCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VenueCell"];
     
-    FSVenue *venue = [self.venues objectAtIndex:indexPath.row];
-    
-    cell.textLabel.text = venue.name;
-    if (venue.distance == 0) {
-        cell.detailTextLabel.text = @"";
-    }
-    else cell.detailTextLabel.text = [NSString stringWithFormat:@"%.1f m", venue.distance];
-    
+    FSVenue *venue = [self.venues objectAtIndex:indexPath.row];    
+    [cell configureWithVenue:venue];
+
     return cell;
 }
 

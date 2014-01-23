@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *name;
 @property (assign, nonatomic) BOOL primary;
+@property (nonatomic, strong) NSString *photoURL;
 
 + (FSCategory *)initFromParsedJSON:(NSDictionary *)json;
 

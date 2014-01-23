@@ -15,7 +15,10 @@
 - (void)addVenuesToTrainingSet:(NSArray *)venues;
 - (void)addVenuesToTestSet:(NSArray *)venues;
 
+- (void)analyzeTrainingSet;
 - (NSInteger)testVenuesCountToFetch;
+
+- (NSDictionary *)trainingCategoriesInfo;
 
 - (NSArray *)filteredCategoryIdsForTestSet;
 - (NSArray *)filteredItemsToRecommend;

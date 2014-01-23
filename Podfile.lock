@@ -1,13 +1,16 @@
 PODS:
+  - AFNetworking (1.3.3)
   - FSOAuth (1.0)
   - PKRevealController (2.0.6)
 
 DEPENDENCIES:
+  - AFNetworking (~> 1.3.3)
   - FSOAuth (~> 1.0)
   - PKRevealController (~> 2.0.6)
 
 SPEC CHECKSUMS:
+  AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
   FSOAuth: 8c590a8e7c716151b5d0f02b78e7b531ed64ff40
   PKRevealController: 883287432cecf4cda037184eb822548b9713f8c2
 
-COCOAPODS: 0.28.0
+COCOAPODS: 0.29.0

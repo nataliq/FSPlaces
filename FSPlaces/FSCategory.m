@@ -7,6 +7,7 @@
 //
 
 #import "FSCategory.h"
+#define PhotoSize @"88"
 
 @implementation FSCategory
 
@@ -23,8 +24,27 @@
 
 + (FSCategory *)initFromParsedJSON:(NSDictionary *)json
 {
-    return [[FSCategory alloc] initWithId:json[@"id"]
-                                     name:json[@"name"]
-                                  primary:[json[@"primary"] boolValue]];
+    FSCategory *category = [[FSCategory alloc] initWithId:json[@"id"]
+                                                     name:json[@"shortName"] ?: json[@"name"]
+                                                  primary:[json[@"primary"] boolValue]];
+    [category initPhotoURLFromParsedJSON:json[@"icon"]];
+    return category;
 }
+
+- (void)initPhotoURLFromParsedJSON:(NSDictionary *)json
+{
+    self.photoURL = [NSString stringWithFormat:@"%@bg_%@%@", json[@"prefix"], PhotoSize, json[@"suffix"]];
+    
+}
+
+- (BOOL)isEqual:(FSCategory *)otherCategory
+{
+    return [self.identifier isEqual:otherCategory.identifier];
+}
+
+- (NSUInteger)hash
+{
+    return self.identifier.hash;
+}
+
 @end

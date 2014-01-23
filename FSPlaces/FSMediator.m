@@ -15,6 +15,8 @@
 #import "FSConnectionManager.h"
 #import "FSLocationManager.h"
 #import "FSRecommender.h"
+#import "FSCategoriesController.h"
+#import "CategoriesDataSource.h"
 
 @interface FSMediator () <UIAlertViewDelegate>
 
@@ -23,6 +25,7 @@
 @property (assign, nonatomic) ShowVenuesType shownVenueType;
 
 @property (strong, nonatomic) NSArray *venuesForRecommendation;
+@property (strong, nonatomic) UIViewController *categoriesController;
 
 @end
 
@@ -82,16 +85,14 @@ static NSInteger runningCategoryRequestsCount = 0;
 
 - (void)addVenuesForTraining:(NSArray *)venues
 {
+    FSRecommender *recommender = [FSRecommender sharedRecomender];
     sourcesCount++;
-    if (venues) [[FSRecommender sharedRecomender] addVenuesToTrainingSet:venues];
+    if (venues) [recommender addVenuesToTrainingSet:venues];
     
     if (sourcesCount == 2) {
-        NSArray *categoryIds = [[FSRecommender sharedRecomender] filteredCategoryIdsForTestSet];
-        runningCategoryRequestsCount = categoryIds.count;
-        NSInteger limit = [[FSRecommender sharedRecomender] testVenuesCountToFetch] / categoryIds.count;
-        for (NSString *categoryId in categoryIds) {
-            [[FSConnectionManager sharedManager] findNearVenuesForCategoryId:categoryId limit:limit];
-        }
+        [recommender analyzeTrainingSet];
+        [self configureCategoriesController:[recommender trainingCategoriesInfo]];
+        [self requestVenuesForCategoryIds:[recommender filteredCategoryIdsForTestSet]];
     }
 }
 
@@ -186,11 +187,35 @@ static NSInteger runningCategoryRequestsCount = 0;
     return self.shownVenueType;
 }
 
+#pragma mark - Show modal controller 
+
+- (void)configureCategoriesController:(NSDictionary *)categoriesInfo
+{
+    UIStoryboard *storyboard = self.placesController.storyboard;
+    FSCategoriesController *vc = [storyboard instantiateViewControllerWithIdentifier:[FSCategoriesController storyboardIdentifier]];
+    CategoriesDataSource *dataSource = [[CategoriesDataSource alloc] initWithCategoriesDictionary:categoriesInfo];
+    [vc setDataSource:dataSource];
+    self.categoriesController = vc;
+}
+
+#pragma mark - 
+- (void)requestVenuesForCategoryIds:(NSArray *)categoryIds
+{
+    runningCategoryRequestsCount = categoryIds.count;
+    NSInteger limit = [[FSRecommender sharedRecomender] testVenuesCountToFetch] / categoryIds.count;
+    for (NSString *categoryId in categoryIds) {
+        [[FSConnectionManager sharedManager] findNearVenuesForCategoryId:categoryId limit:limit];
+    }
+}
+
 #pragma mark - Alert view delegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
+        [self.placesController presentViewController:self.categoriesController animated:YES completion:nil];
         [self setVenuesToShow:self.venuesForRecommendation];
+        self.categoriesController = nil;
+        self.venuesForRecommendation = nil;
     }
 }
 

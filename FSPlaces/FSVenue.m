@@ -7,6 +7,7 @@
 //
 
 #import "FSVenue.h"
+#import "FSCategory.h"
 
 @implementation FSVenue
 
@@ -47,6 +48,7 @@
 {
     self.location = [[CLLocation alloc] initWithLatitude:[[locationInfo objectForKey:@"lat"] floatValue] longitude:[[locationInfo objectForKey:@"lng"] floatValue]];
     self.distance = [[locationInfo objectForKey:@"distance"] floatValue];
+    self.address = [locationInfo objectForKey:@"address"];
 }
 
 - (void)initCategoryNames:(NSArray *)categoriesData
@@ -74,6 +76,19 @@
     return nil;
 }
 
+- (FSCategory *)primaryCategory
+{
+    NSInteger primaryCategoryIndex = [self.categories indexOfObjectPassingTest:^BOOL(FSCategory *category, NSUInteger idx, BOOL *stop) {
+        return category.primary == YES;
+    }];
+    if (primaryCategoryIndex != NSNotFound) {
+        return self.categories[primaryCategoryIndex];
+    }
+    else {
+        return nil;
+    }
+}
+
 - (CGFloat)proportionBetweenCheckinsAndUsersCount
 {
     return (float)self.usersCount / (float)self.checkinsCount;
@@ -88,6 +103,7 @@
 - (BOOL)isEqual:(FSVenue *)otherVenue
 {
     BOOL isEqual = [self.identifier isEqual:otherVenue.identifier];
+
     return isEqual;
 }
 
