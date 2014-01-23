@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1446494A1891230400E6AEB8 /* FSCluster.m in Sources */ = {isa = PBXBuildFile; fileRef = 144649491891230400E6AEB8 /* FSCluster.m */; };
 		1495EFC817753839002EDF1D /* ContactInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFC717753839002EDF1D /* ContactInformation.m */; };
 		1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1495EFCA17753F38002EDF1D /* ProfileView.m */; };
 		3F94CFEC51744DD5AB1E4E10 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35E7102A9C2049F2A096F4C1 /* libPods.a */; };
@@ -68,6 +69,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		144649481891230400E6AEB8 /* FSCluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCluster.h; sourceTree = "<group>"; };
+		144649491891230400E6AEB8 /* FSCluster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCluster.m; sourceTree = "<group>"; };
 		1495EFC617753839002EDF1D /* ContactInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactInformation.h; sourceTree = "<group>"; };
 		1495EFC717753839002EDF1D /* ContactInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInformation.m; sourceTree = "<group>"; };
 		1495EFC917753F38002EDF1D /* ProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileView.h; sourceTree = "<group>"; };
@@ -300,6 +303,8 @@
 				4D8CE29E1772E6A3008D0738 /* FSMediator.m */,
 				B3201C40188C2FF000AA540D /* FSRecommender.h */,
 				B3201C41188C2FF000AA540D /* FSRecommender.m */,
+				144649481891230400E6AEB8 /* FSCluster.h */,
+				144649491891230400E6AEB8 /* FSCluster.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -535,6 +540,7 @@
 				4D8CE29A1772E2DB008D0738 /* UIAlertView+FSAlerts.m in Sources */,
 				4D8CE29F1772E6A3008D0738 /* FSMediator.m in Sources */,
 				4D7C3E4817744E6800D191F8 /* VenueDataSource.m in Sources */,
+				1446494A1891230400E6AEB8 /* FSCluster.m in Sources */,
 				1495EFC817753839002EDF1D /* ContactInformation.m in Sources */,
 				1495EFCB17753F38002EDF1D /* ProfileView.m in Sources */,
 				4DC8B2D51785D0EC00F6536E /* UIBarButtonItem+CustomBarButtonItem.m in Sources */,
