@@ -19,9 +19,6 @@
 #import "AppDelegate.h"
 #import <FSOAuth.h>
 
-#define MAP_REGION 300
-#define MAP_BIG_REGION 3000
-
 @interface PlacesViewController () <MKMapViewDelegate, UITableViewDelegate>
 
 @property (strong, nonatomic) UIButton *showUserLocationButton;
@@ -107,12 +104,8 @@
 
 - (void)updateMapViewRegion
 {
-    if (self.lastCheckinLocation) {
-        [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.lastCheckinLocation.coordinate, MAP_BIG_REGION, MAP_BIG_REGION)];
-    }
-    else if (self.currentLocation) {
-        [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_REGION, MAP_REGION)];
-    }
+    CGFloat maximumDistance = [[self.venueDataSource.venues valueForKeyPath:@"@max.distance"] floatValue];
+    [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, maximumDistance, maximumDistance) animated:YES];
     
     self.map.showsUserLocation = YES;
 }
@@ -164,7 +157,7 @@
     
     FSVenueAnnotation *annotation = (FSVenueAnnotation *)view.annotation;
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
+    UIStoryboard *storyboard = self.storyboard;
     FSVenueDetalsViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"VenueDetails"];
     
     FSVenue *matchedVenue = nil;
@@ -238,15 +231,7 @@
 - (IBAction)showUserLocation
 {
     if (self.currentLocation) {
-        if (self.lastCheckinLocation) {
-            [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_BIG_REGION, MAP_BIG_REGION) animated:YES];
-        }
-        else if (self.currentLocation) {
-            [self.map setRegion:MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, MAP_REGION, MAP_REGION) animated:YES];
-        }
-        
-        self.map.showsUserLocation = YES;
-
+        [self updateMapViewRegion];
     }
     else {
         [[UIAlertView locationErrorAlert] show];

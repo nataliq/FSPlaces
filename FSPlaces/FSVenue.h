@@ -8,6 +8,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
+#import "FSCategory.h"
 
 @interface FSVenue : NSObject
 

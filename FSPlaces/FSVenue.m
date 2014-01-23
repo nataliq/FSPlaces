@@ -7,7 +7,6 @@
 //
 
 #import "FSVenue.h"
-#import "FSCategory.h"
 
 @implementation FSVenue
 
@@ -89,11 +88,12 @@
 - (BOOL)isEqual:(FSVenue *)otherVenue
 {
     BOOL isEqual = [self.identifier isEqual:otherVenue.identifier];
-    BOOL equalNames = [self.name isEqualToString:otherVenue.name];
-    if (isEqual != equalNames) {
-        NSLog(@"Venue 1: %@, %@; Venue 2: %@, %@", self.identifier, self.name, otherVenue.identifier, otherVenue.name);
-    }
     return isEqual;
+}
+
+- (NSUInteger)hash
+{
+    return self.identifier.hash;
 }
 
 @end

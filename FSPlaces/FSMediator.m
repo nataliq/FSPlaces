@@ -88,7 +88,7 @@ static NSInteger runningCategoryRequestsCount = 0;
     if (sourcesCount == 2) {
         NSArray *categoryIds = [[FSRecommender sharedRecomender] filteredCategoryIdsForTestSet];
         runningCategoryRequestsCount = categoryIds.count;
-        NSInteger limit = [[FSRecommender sharedRecomender] testVenuesCounToFetch] / categoryIds.count;
+        NSInteger limit = [[FSRecommender sharedRecomender] testVenuesCountToFetch] / categoryIds.count;
         for (NSString *categoryId in categoryIds) {
             [[FSConnectionManager sharedManager] findNearVenuesForCategoryId:categoryId limit:limit];
         }

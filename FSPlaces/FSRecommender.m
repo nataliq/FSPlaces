@@ -19,6 +19,8 @@
 @property (assign, nonatomic) NSInteger maxUserCount;
 @property (assign, nonatomic) NSInteger minUserCount;
 
+@property (strong, nonatomic) NSMutableDictionary *beenHereByCategory;
+
 @end
 
 NSInteger const MaxCategoriesCount = 20;
@@ -63,7 +65,7 @@ static FSRecommender* sharedRecomender = nil;
     [self.venuesTestSet addObjectsFromArray:venues];
 }
 
-- (NSInteger)testVenuesCounToFetch
+- (NSInteger)testVenuesCountToFetch
 {
     return (self.venuesTrainingSet.count * (1 - TrainingTestRatio) ) / TrainingTestRatio;
 }
@@ -72,11 +74,15 @@ static FSRecommender* sharedRecomender = nil;
 {
     NSMutableDictionary *beenHereByCategory = [NSMutableDictionary dictionary];
     for (FSVenue *venue in self.venuesTrainingSet) {
-        NSString *key = [venue.categories.firstObject identifier];
-        NSNumber *countForCategory = beenHereByCategory[key];
-        NSInteger count = [countForCategory integerValue] + venue.beenHereCount;
-        [beenHereByCategory setObject:@(count) forKey:key];
-    
+        NSInteger primaryCategoryIndex = [venue.categories indexOfObjectPassingTest:^BOOL(FSCategory *category, NSUInteger idx, BOOL *stop) {
+            return category.primary == YES;
+        }];
+        if (primaryCategoryIndex != NSNotFound) {
+            NSString *primaryCategoryId = [venue.categories[primaryCategoryIndex] identifier];
+            NSNumber *countForCategory = beenHereByCategory[primaryCategoryId];
+            NSInteger count = [countForCategory integerValue] + venue.beenHereCount;
+            [beenHereByCategory setObject:@(count) forKey:primaryCategoryId];
+        }
     }
     
     NSArray *sortedCounts = [beenHereByCategory.allValues sortedArrayUsingSelector:@selector(compare:)];
@@ -107,6 +113,7 @@ static FSRecommender* sharedRecomender = nil;
         }
     }
     
+    [self.venuesTestSet minusSet:self.venuesTrainingSet];
     [venuesToRecommend addObjectsFromArray:[self evaluateItemsFromTestSet]];
     
 //    NSArray *nearestVenues = [self.venuesTestSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
