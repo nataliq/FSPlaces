@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CategoriesDataSource.h"
 
-@interface FSCategoriesController : UIViewController
+@interface FSCategoriesController : UIViewController <UINavigationBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) CategoriesDataSource *dataSource;

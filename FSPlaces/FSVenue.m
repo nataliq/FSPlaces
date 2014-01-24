@@ -96,8 +96,8 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"Name: %@, Categories: %@, Been here: %d, Users: %d, Checkins: %d, Proportion: %f",
-            self.name, self.categoriesNames, self.beenHereCount, self.usersCount, self.checkinsCount, self.proportionBetweenCheckinsAndUsersCount];
+    return [NSString stringWithFormat:@"Name: %@,Distance: %.2f, Categories: %@, Been here: %d, Users: %d, Checkins: %d, Proportion: %f",
+            self.name, self.distance, self.categoriesNames, self.beenHereCount, self.usersCount, self.checkinsCount, self.proportionBetweenCheckinsAndUsersCount];
 }
 
 - (BOOL)isEqual:(FSVenue *)otherVenue

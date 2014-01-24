@@ -20,6 +20,9 @@
 
 @implementation FSRequest
 
+static BOOL userless = NO;
+static NSString *urlPath = @"";
+
 - (id)init
 {
     self = [super init];
@@ -47,15 +50,25 @@
     return self;
 }
 
+- (instancetype)initWithURLPath:(NSString *)path userless:(BOOL)haveUser
+{
+    userless = haveUser;
+    urlPath = path;
+    
+    self = [self initWithURL:[self.class getURLWithParams:nil]];
+    if (self) {
+    }
+    return self;
+}
+
 + (NSString *)URLPath
 {
-    //subclasses should override this method
-    return nil;
+    return urlPath;
 }
 
 + (BOOL)requestIsUserless
 {
-    return NO;
+    return userless;
 }
 
 + (NSURL *)getURL

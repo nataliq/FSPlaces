@@ -40,6 +40,7 @@
 - (void)findNearVenuesForCategoryId:(NSString *)categoryId limit:(NSInteger)limit;
 
 - (void)checkInInVenue:(FSVenue *)venue;
+- (NSString *)getCanonicalURLStringForVenue:(FSVenue *)venue;
 
 
 @end

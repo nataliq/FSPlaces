@@ -35,6 +35,7 @@ typedef enum
 - (void)profileActionSelected;
 - (void)setShownViewStyle:(PlacesViewStyle)shownViewStyle;
 - (ShowVenuesType)shownType;
+- (void)showVenuesToRecommend;
 
 @end
 

@@ -8,6 +8,7 @@
 
 #import "CategoriesDataSource.h"
 #import "FSCategory.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface CategoriesDataSource ()
 
@@ -56,6 +57,8 @@ static NSString *CellIdentifier = @"CategoryWithCountCell";
     FSCategory *category = self.categories[indexPath.row];
     cell.textLabel.text = category.name;
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ times", self.beenHereCountByIds[category.identifier]];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:category.photoURL]
+                   placeholderImage:[UIImage imageNamed:@"placeholder_44.png"]];
     
     return cell;
 }

@@ -10,6 +10,7 @@
 #import "FSConnectionManager.h"
 #import "FSVenue.h"
 #import "FSVenue+AttributesVector.h"
+#import "FSCluster.h"
 
 @interface FSRecommender ()
 
@@ -119,7 +120,6 @@ static FSRecommender* sharedRecomender = nil;
 {
     NSMutableArray *venuesToRecommend = [NSMutableArray array];
     
-    
     // recommend venues from todo list for sure
     NSMutableSet *intersectionBetweenSets = [[NSMutableSet alloc] initWithSet:self.venuesTrainingSet];
     [intersectionBetweenSets intersectSet:self.venuesTestSet];
@@ -130,14 +130,18 @@ static FSRecommender* sharedRecomender = nil;
     }
     
     [self.venuesTestSet minusSet:self.venuesTrainingSet];
+    
+    //    [self clusterizeTestSet];
     [venuesToRecommend addObjectsFromArray:[self evaluateItemsFromTestSet]];
     
-//    NSArray *nearestVenues = [self.venuesTestSet.allObjects sortedArrayUsingComparator:^NSComparisonResult(FSVenue *v1, FSVenue *v2) {
-//        return (NSComparisonResult) [@(v1.distance) compare:@(v2.distance)];;
-//    }];
-//    [venuesToRecommend addObjectsFromArray:[nearestVenues subarrayWithRange:NSMakeRange(0, MIN(50, floor(0.2 * nearestVenues.count)))]];
-    
     return venuesToRecommend;
+}
+
+- (void)clusterizeTestSet
+{
+    NSArray *nearestVenues = [FSCluster clusterizeAndGetNearestVenues:self.venuesTestSet.allObjects];
+    [self.venuesTestSet removeAllObjects];
+    [self.venuesTestSet addObjectsFromArray:nearestVenues];
 }
 
 - (NSArray *)evaluateItemsFromTestSet

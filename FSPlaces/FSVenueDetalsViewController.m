@@ -41,8 +41,8 @@
     
     [self.webView setDelegate:self];
     
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.venue.urlAddress]]];
-	// Do any additional setup after loading the view.
+    NSString *urlString = [[FSConnectionManager sharedManager] getCanonicalURLStringForVenue:self.venue];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
 }
 
 - (void)didReceiveMemoryWarning

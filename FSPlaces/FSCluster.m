@@ -9,18 +9,21 @@
 #import "FSCluster.h"
 #import "FSVenue.h"
 #import "FSLocationManager.h"
+#import "NSArray+StandartDeviation.h"
 
-#define MaxIterationCount 1000
+#define MaxIterationCount 10000
 
 @interface FSCluster ()
 
-@property (strong, nonatomic) NSArray *venuesTestSet;
+@property (strong, nonatomic) NSMutableArray *venuesTestSet;
 
 @property (strong, nonatomic) CLLocation *nearestCentroid;
-@property (strong, nonatomic) CLLocation *farestCentroid;
+@property (strong, nonatomic) CLLocation *farestCentroid1;
+@property (strong, nonatomic) CLLocation *farestCentroid2;
 
 @property (strong, nonatomic) NSMutableArray *nearestVenues;
-@property (strong, nonatomic) NSMutableArray *fahrestVenues;
+@property (strong, nonatomic) NSMutableArray *fahrestVenues1;
+@property (strong, nonatomic) NSMutableArray *fahrestVenues2;
 
 @end
 
@@ -46,9 +49,10 @@ static BOOL centersAreRecalculated = NO;
 {
     self = [super init];
     if (self) {
-        self.venuesTestSet = testSet;
+        self.venuesTestSet = [NSMutableArray arrayWithArray:testSet];
         self.nearestVenues = [NSMutableArray array];
-        self.fahrestVenues = [NSMutableArray array];
+        self.fahrestVenues1 = [NSMutableArray array];
+        self.fahrestVenues2 = [NSMutableArray array];
     }
     return self;
 }
@@ -58,19 +62,30 @@ static BOOL centersAreRecalculated = NO;
 + (NSArray *)clusterizeAndGetNearestVenues:(NSArray *)testVenues
 {
     FSCluster *cluster = [[FSCluster alloc] initWithTestSet:testVenues];
+    [cluster removeOutliers];
     return [cluster clusteringTestSet];
 }
 
 #pragma mark - Heplers
 
+- (void)removeOutliers
+{
+    NSArray *distances = [self.venuesTestSet valueForKeyPath:@"@unionOfObjects.distance"];
+    CGFloat maxDistance = 3 * [[distances standartDeviation] floatValue];
+    NSIndexSet *indexesOfObjectsToBeRemoved = [self.venuesTestSet indexesOfObjectsPassingTest:^BOOL(FSVenue *venue, NSUInteger idx, BOOL *stop) {
+        return venue.distance > maxDistance;
+    }];
+    
+    [self.venuesTestSet removeObjectsAtIndexes:indexesOfObjectsToBeRemoved];
+}
+
 - (NSArray *)clusteringTestSet
 {
     self.nearestCentroid = [self getNearestClusterCentroidFromTestSet];
-    self.farestCentroid = [self getFarestClusterCentroidFromTestSet];
+    self.farestCentroid1 = [self getFarestClusterCentroidFromTestSet];
+    self.farestCentroid2 = [self getOppositeFarestClusterCentroidFromTestSet];
     
-    for (FSVenue *venue in self.venuesTestSet) {
-        [self addVenueToAppriopriateCluster:venue];
-    }
+    [self addVenuesToAppriopriateCluster:self.venuesTestSet];
     
     NSInteger currentIteration = 0;
     while (centersAreRecalculated && currentIteration < MaxIterationCount) {
@@ -79,6 +94,7 @@ static BOOL centersAreRecalculated = NO;
         
         [self moveVenuesBetweenClusters];
     }
+    NSLog(@"Iterations: %d", currentIteration);
     
     //    while ([self isClusterCentroidMoveFrom:nearestCentroid To: [self calculateNewCentroidLocation:nearestVenues]]||
     //            [self isClusterCentroidMoveFrom:farestCentroid To: [self calculateNewCentroidLocation:farestVenues]]) {
@@ -94,6 +110,7 @@ static BOOL centersAreRecalculated = NO;
 - (CLLocation *)getNearestClusterCentroidFromTestSet
 {
     CLLocation *currentLocation = [[FSLocationManager sharedManager] getCurrentLocation];
+    return currentLocation;
     FSVenue *testVenue = self.venuesTestSet[arc4random() % self.venuesTestSet.count];
     CLLocation *nearestClusterCentroidLocation = testVenue.location;
     for (FSVenue *venue in self.venuesTestSet) {
@@ -120,79 +137,112 @@ static BOOL centersAreRecalculated = NO;
         }
         
     }
+    NSLog(@"Distance between centroids: %f", [self.nearestCentroid distanceFromLocation:farestClusterCentroidLocation]);
     return farestClusterCentroidLocation;
 }
 
-- (CLLocation *)calculateNewCentroidLocation:(NSMutableArray *)venuesInCluster
+- (CLLocation *)getOppositeFarestClusterCentroidFromTestSet
 {
-    CLLocationDegrees longitude = 0.0;
-    CLLocationDegrees latitude = 0.0;
+    CLLocationDegrees longitude = 2 * self.nearestCentroid.coordinate.longitude - self.farestCentroid1.coordinate.longitude;
+    CLLocationDegrees latitude = 2 * self.nearestCentroid.coordinate.latitude - self.farestCentroid1.coordinate.latitude ;
+    
+    return [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+}
+
+- (CLLocation *)calculateNewCentroidLocation:(NSMutableArray *)venuesInCluster centroid:(CLLocation *)centroid
+{
+    CLLocationDegrees longitude = centroid.coordinate.longitude;
+    CLLocationDegrees latitude = centroid.coordinate.latitude;
     for(FSVenue * venue in venuesInCluster){
         longitude += venue.location.coordinate.longitude;
         latitude += venue.location.coordinate.latitude;
     }
     
-    latitude = latitude / (float)venuesInCluster.count;
-    longitude = longitude / (float)venuesInCluster.count;
+    latitude = latitude / (float)(venuesInCluster.count + 1);
+    longitude = longitude / (float)(venuesInCluster.count +1);
     CLLocation *newCentroidLocation = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
     
     return newCentroidLocation;
 }
 
-- (void)recalculateCentroid:(CLLocation *)centroid
+- (CLLocation *)recalculateCentroid:(CLLocation *)centroid
 {
     centersAreRecalculated = YES;
-    
-    if ([centroid isEqual:self.nearestCentroid]) {
-        self.nearestCentroid = [self calculateNewCentroidLocation:self.nearestVenues];
-    }
-    else if ([centroid isEqual:self.farestCentroid]) {
-        self.farestCentroid = [self calculateNewCentroidLocation:self.fahrestVenues];
-    }
+    return [self calculateNewCentroidLocation:self.nearestVenues centroid:centroid];
 }
 
 - (void)recalculateCentroids
 {
-    [self recalculateCentroid:self.nearestCentroid];
-    [self recalculateCentroid:self.farestCentroid];
+    self.nearestCentroid = [self recalculateCentroid:self.nearestCentroid];
+    self.farestCentroid1 = [self recalculateCentroid:self.farestCentroid1];
+    self.farestCentroid2 = [self recalculateCentroid:self.farestCentroid2];
 }
 
 #pragma mark - Position venue
+- (void)addVenuesToAppriopriateCluster:(NSArray *)venues
+{
+    for (FSVenue *venue in venues) {
+        [self addVenueToAppriopriateCluster:venue];
+    }
+}
+
 - (void)addVenueToAppriopriateCluster:(FSVenue *)venue
 {
     CLLocationDistance distanceToNearestCentroid = [venue.location distanceFromLocation:self.nearestCentroid];
-    CLLocationDistance distanecToFarestCentoid = [venue.location distanceFromLocation:self.farestCentroid];
-    if(distanceToNearestCentroid < distanecToFarestCentoid){
+    CLLocationDistance distanecToFarestCentoid1 = [venue.location distanceFromLocation:self.farestCentroid1];
+    CLLocationDistance distanecToFarestCentoid2 = [venue.location distanceFromLocation:self.farestCentroid2];
+    
+    if(distanceToNearestCentroid < MIN(distanecToFarestCentoid1, distanecToFarestCentoid2)){
         [self.nearestVenues addObject:venue];
-        [self recalculateCentroid:self.nearestCentroid];
+        self.nearestCentroid = [self recalculateCentroid:self.nearestCentroid];
+    }
+    else if (distanecToFarestCentoid1 < distanecToFarestCentoid2){
+        [self.fahrestVenues1 addObject:venue];
+        self.farestCentroid1 = [self recalculateCentroid:self.farestCentroid1];
     }
     else {
-        [self.fahrestVenues addObject:venue];
-        [self recalculateCentroid:self.farestCentroid];
+        [self.fahrestVenues2 addObject:venue];
+        self.farestCentroid2 = [self recalculateCentroid:self.farestCentroid2];
     }
 }
 
 - (void)moveVenuesBetweenClusters
 {
-    NSMutableArray *venuesToMoveToFahrestSet = [NSMutableArray array];
+    NSMutableArray *venuesToMove = [NSMutableArray array];
+    
+    
+    NSMutableArray *venuesToRemoveFromNearest = [NSMutableArray array];
     for (FSVenue *venue in self.nearestVenues) {
-        if ([venue.location distanceFromLocation:self.nearestCentroid] > [venue.location distanceFromLocation:self.farestCentroid]) {
-            [venuesToMoveToFahrestSet addObject:venue];
+        if ([venue.location distanceFromLocation:self.nearestCentroid] >
+            MIN([venue.location distanceFromLocation:self.farestCentroid1], [venue.location distanceFromLocation:self.farestCentroid2])) {
+            [venuesToRemoveFromNearest addObject:venue];
+            [venuesToMove addObject:venue];
         }
     }
     
-    NSMutableArray *venuesToMoveToNearestSet = [NSMutableArray array];
-    for (FSVenue *venue in self.fahrestVenues) {
-        if ([venue.location distanceFromLocation:self.nearestCentroid] < [venue.location distanceFromLocation:self.farestCentroid]) {
-            [venuesToMoveToNearestSet addObject:venue];
+    NSMutableArray *venuesToRemoveFromFahrest1 = [NSMutableArray array];
+    for (FSVenue *venue in self.fahrestVenues1) {
+        if ([venue.location distanceFromLocation:self.farestCentroid1] >
+            MIN([venue.location distanceFromLocation:self.nearestCentroid], [venue.location distanceFromLocation:self.farestCentroid2])) {
+            [venuesToRemoveFromFahrest1 addObject:venue];
+            [venuesToMove addObject:venue];
         }
     }
     
-    [self.nearestVenues removeObjectsInArray:venuesToMoveToFahrestSet];
-    [self.fahrestVenues addObjectsFromArray:venuesToMoveToFahrestSet];
+    NSMutableArray *venuesToRemoveFromFahrest2 = [NSMutableArray array];
+    for (FSVenue *venue in self.fahrestVenues2) {
+        if ([venue.location distanceFromLocation:self.farestCentroid2] >
+            MIN([venue.location distanceFromLocation:self.nearestCentroid], [venue.location distanceFromLocation:self.farestCentroid1])) {
+            [venuesToRemoveFromFahrest2 addObject:venue];
+            [venuesToMove addObject:venue];
+        }
+    }
     
-    [self.fahrestVenues removeObjectsInArray:venuesToMoveToNearestSet];
-    [self.nearestVenues addObjectsFromArray:venuesToMoveToNearestSet];
+    [self.nearestVenues removeObjectsInArray:venuesToRemoveFromNearest];
+    [self.fahrestVenues1 removeObjectsInArray:venuesToRemoveFromFahrest1];
+    [self.fahrestVenues2 removeObjectsInArray:venuesToRemoveFromFahrest2];
+    
+    [self addVenuesToAppriopriateCluster:venuesToMove];
     
     [self recalculateCentroids];
 }

@@ -21,6 +21,7 @@ typedef void (^ComplitionHandler)(NSURLResponse *response, NSData *data, NSError
 @property (nonatomic, assign) id<FSConnectionManagerDelegate> delegate;
 
 - (instancetype)initWithParameters:(NSDictionary *)params;
+- (instancetype)initWithURLPath:(NSString *)urlPath userless:(BOOL)userless;
 
 + (NSURL *)getURL;
 + (NSString *)URLPath;

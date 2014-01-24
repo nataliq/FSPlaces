@@ -212,6 +212,23 @@ static NSInteger startedRequestsForCategories = 0;
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:request.handlerBlock];
 }
 
+- (NSString *)getCanonicalURLStringForVenue:(FSVenue *)venue
+{
+    NSString *urlPath = [NSString stringWithFormat:@"/venues/%@", venue.identifier];
+    FSRequest *request = [[FSRequest alloc] initWithURLPath:urlPath userless:YES];
+    
+    NSError *error = nil;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+    
+    if (!error) {
+        NSDictionary *venueData = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
+        NSString *venueURLString = venueData[@"response"][@"venue"][@"canonicalUrl"];
+        return venueURLString;
+    }
+    
+    return nil;
+}
+
 #pragma mark - Cancel connection
 
 - (void)cancelConnection

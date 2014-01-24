@@ -7,6 +7,7 @@
 //
 
 #import "FSCategoriesController.h"
+#import "FSMediator.h"
 
 @interface FSCategoriesController ()
 
@@ -36,6 +37,14 @@ static NSString *StoryboardIdentifier = @"CategoriesTable";
 }
 
 - (IBAction)cancelButtonTapped:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[FSMediator sharedMediator] showVenuesToRecommend];
+    }];
 }
+
+#pragma mark - Navigation bar delegate
+- (UIBarPosition)positionForBar:(id <UIBarPositioning>)bar {
+    return UIBarPositionTopAttached;
+}
+    
 @end

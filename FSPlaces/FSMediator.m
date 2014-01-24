@@ -91,7 +91,7 @@ static NSInteger runningCategoryRequestsCount = 0;
     
     if (sourcesCount == 2) {
         [recommender analyzeTrainingSet];
-        [self configureCategoriesController:[recommender trainingCategoriesInfo]];
+        [self showCategoriesController:[recommender trainingCategoriesInfo]];
         [self requestVenuesForCategoryIds:[recommender filteredCategoryIdsForTestSet]];
     }
 }
@@ -103,6 +103,15 @@ static NSInteger runningCategoryRequestsCount = 0;
     
     if (runningCategoryRequestsCount == 0) {
         self.venuesForRecommendation = [[FSRecommender sharedRecomender] filteredItemsToRecommend];
+        if (!self.categoriesController) {
+            [self showVenuesToRecommend];
+        }
+    }
+}
+
+- (void)showVenuesToRecommend
+{
+    if (self.venuesForRecommendation) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[[UIAlertView alloc] initWithTitle:@"Hey, we found some interesting places!"
                                         message:@"We think that you may be interested in checking out some cool places around you"
@@ -110,9 +119,10 @@ static NSInteger runningCategoryRequestsCount = 0;
                               cancelButtonTitle:@"View places"
                               otherButtonTitles: nil]
              show];
-
+            
         });
     }
+    self.categoriesController = nil;
 }
 
 - (void)setShownViewStyle:(PlacesViewStyle)shownViewStyle
@@ -189,13 +199,17 @@ static NSInteger runningCategoryRequestsCount = 0;
 
 #pragma mark - Show modal controller 
 
-- (void)configureCategoriesController:(NSDictionary *)categoriesInfo
+- (void)showCategoriesController:(NSDictionary *)categoriesInfo
 {
     UIStoryboard *storyboard = self.placesController.storyboard;
     FSCategoriesController *vc = [storyboard instantiateViewControllerWithIdentifier:[FSCategoriesController storyboardIdentifier]];
     CategoriesDataSource *dataSource = [[CategoriesDataSource alloc] initWithCategoriesDictionary:categoriesInfo];
     [vc setDataSource:dataSource];
     self.categoriesController = vc;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.placesController presentViewController:vc animated:YES completion:nil];
+    });
 }
 
 #pragma mark - 
@@ -212,9 +226,7 @@ static NSInteger runningCategoryRequestsCount = 0;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
-        [self.placesController presentViewController:self.categoriesController animated:YES completion:nil];
         [self setVenuesToShow:self.venuesForRecommendation];
-        self.categoriesController = nil;
         self.venuesForRecommendation = nil;
     }
 }
